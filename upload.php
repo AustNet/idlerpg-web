@@ -2,6 +2,9 @@
     /* upload.php
      * Allows a remote bot to upload the database files so the web works on a different system
      * Additional configuration required, $irpg_api to be filled in.
+     * 
+     * Just uses the following command from command line on cron or something
+     * - wget --post-file=original.file.name "http://nic-web01/idlerpg-web/upload.php?api=75d59b8e08bcf53a937afec48c1b80d6&file=db" -O output.log
      */
 
     include("config.php");
@@ -23,7 +26,7 @@
     }
 
     
-// /* debug only
+/* debug only
     echo '--------------------------------------------------------'.PHP_EOL;
     echo '  api = '. $irpg_api . PHP_EOL;
     echo '   db = '. $irpg_db . PHP_EOL;
@@ -33,5 +36,5 @@
     echo PHP_EOL;
     echo '|'.$DATA.'|';
     echo '--------------------------------------------------------'.PHP_EOL;
-// */
+*/
     ?>
