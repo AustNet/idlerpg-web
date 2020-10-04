@@ -1,47 +1,45 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1 Strict//EN"
-        "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+    
+    <style type="text/css"><!--
+    body { font-family: trebuchet ms, Arial, Helvetica, Sans Serif; }
+    p { text-indent: 15px; }
+    .head1 { font-size: larger; font-weight: bold; }
+    .smaller { font-size: smaller; }
+    a { text-decoration: none; }
+    a:hover { text-decoration: underline; color: black; }
+    --></style></head>
+  <body bgcolor="#ffffff" text="#000000">
 
-<html>
-  <head>
-    <title><?echo $irpg_chan;?> Idle RPG: <?echo $irpg_page_title;?></title>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <link rel="stylesheet" type="text/css" href="g7.css" />
-  </head>
-  <body>
-
-    <!-- Idle RPG Logo -->
-
-    <div class="head">
+<img src="head.png" alt="#g7 Idle RPG" title="#g7 Idle RPG" width="400" height="100">
+<p>
 <?php
-    echo('        <img src="'. $irpg_logo .'" alt="'. $irpg_chan .' Idle RPG" title="'. $irpg_chan .' Idle RPG" width="338" height="115" />');
-?>
-    </div>
-
-    <div id="menu" class="menu">
-
-<?php
-    $topbarurl = array(
-        'Game Info' => $BASEURL . 'index.php',
-        'Player Info' => $BASEURL . 'players.php',
-        'Contact' => $BASEURL . 'contact.php',
-        'Source' => 'http://idlerpg.net/source.php',
-        'Other IRPGs' => 'http://idlerpg.net/others.php',
-        'Site Source' => 'http://idlerpg.net/sitesource.php',
-        'World Map' => $BASEURL . 'worldmap.php',
-        'Quest Info' => $BASEURL . 'quest.php',
-        'Forum' => 'http://idlerpg.net/forum.php',
-        'moo.' => 'http://cowcult.org',
-    );
-
-    foreach ($topbarurl as $key => $value) {
-        if ($topbarurl[$key] ==  $_SERVER['PHP_SELF']) {
-            echo "        <a class=\"home\" href=\"$value\">$key</a>\n";
-        }
-        else {
-            echo "        <a href=\"$value\">$key</a>\n";
-        }
+    if ($_SERVER['PHP_SELF'] == '/g7/index.php') { echo "Game Info /\n"; }
+    else {
+        echo "<a href=\"http://jotun.ultrazone.org/g7/index.php\">Game Info</a> /\n";
+    }
+    if ($_SERVER['PHP_SELF'] == '/g7/players.php' && !$_GET['player']) {
+        echo "Player Info /\n";
+    }
+    else {
+        echo "<a href=\"http://jotun.ultrazone.org/g7/players.php\">Player Info</a> /\n";
+    }
+    if ($_SERVER['PHP_SELF'] == '/g7/contact.php' && !($_POST['from'] &&
+        $_POST['text'])) {
+        echo "Contact /\n";
+    }
+    else {
+        echo "<a href=\"http://jotun.ultrazone.org/g7/contact.php\">Contact</a> /\n";
+    }
+    if ($_SERVER['PHP_SELF'] == '/g7/source.php') { echo "Source /\n"; }
+    else {
+        echo "<a href=\"http://jotun.ultrazone.org/g7/source.php\">Source</a> /\n";
+    }
+    if ($_SERVER['PHP_SELF'] == '/g7/others.php') { echo "Other IRPGs /\n"; }
+    else {
+        echo "<a href=\"http://jotun.ultrazone.org/g7/others.php\">Other IRPGs</a> /\n";
+    }
+    if ($_SERVER['PHP_SELF'] == '/g7/sitesource.php') { echo "Site Source\n"; }
+    else {
+        echo "<a href=\"http://jotun.ultrazone.org/g7/sitesource.php\">Site Source</a>\n";
     }
 ?>
-    </div>
-
-    <div class="content">
+</p>

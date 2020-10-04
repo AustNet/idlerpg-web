@@ -1,0 +1,68 @@
+#!/usr/bin/perl
+
+# idlerpg (5-12-2003) by barik/parallax (http://www.barik.net)
+# rewritten (7-1-2003) by mikegrb/detblot mikegrb@yahoo.com
+# to parse the db output yielding on player stats :)
+# Usage: idlestats <playername>
+#
+# Call this script from the command line, or your login profile.
+
+# check for valid command-line
+
+die "Usage: idlestats <playername>\n" .
+    "Example: idlestats detblot\n" if @ARGV == 0;    
+
+# open a simple web connection, and assume it connects.
+# if it does not connect, nothing is printed.
+
+use LWP::Simple;
+$_ = get 'http://jotun.ultrazone.org/g7/db.php';
+
+#split up the lines since users cross line boundries
+split /\n/;
+
+# fetch the specified username. if not found, we
+# simply do not print anything
+
+LINE: foreach (@_) {
+  # rows start as a <tr> on a line by its self, next
+  # line contains char name
+  if (/<tr>/)  { $row++; $expect = "user"; next LINE; }
+
+  # we're waiting for the next user... loop until we
+  # get a new row
+  next LINE if ($expect eq "next");
+
+  # this should be a user line, see if we want this one
+  if ($expect eq "user") {
+    if (/<td NOWRAP>(.*)<\/td>/) { 
+      if ($1 eq $ARGV[0]) { $expect = "stats" }
+      else { $expect = "next" }
+    }
+    next LINE;
+  }
+  # if we are here, we want this stuff :-)
+  if ($expect eq "stats") {
+    if (/<td NOWRAP>(.*)<\/td>/) { push @stats, $1 }
+    next LINE;
+  }
+}
+
+print << "EOM"
+$ARGV[0] the level $stats[0] $stats[1], has $stats[2] until
+next level.
+
+Current Inventory:
+  Amulet\t$stats[6]
+  Charm\t\t$stats[7]
+  Helm\t\t$stats[8]
+  Boots\t\t$stats[9]
+  Gloves\t$stats[10]
+  Ring\t\t$stats[11]
+  Leggings\t$stats[12]
+  Shield\t$stats[13]
+  Tunic\t\t$stats[14]
+  Weapon\t$stats[15]
+  -------------------
+  Sum:\t\t$stats[16]
+EOM

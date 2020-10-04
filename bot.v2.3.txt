@@ -1,0 +1,1255 @@
+#!/usr/local/bin/perl
+# irpg bot v2.3 by jotun, jotun@ultrazone.org
+#
+# Some code within this file was written by authors other than myself. As such,
+# distributing this code or distributing modified versions of this code is
+# strictly prohibited without written authorization from the authors. Contact
+# jotun@ultrazone.org.
+#
+# Please mail bugs, etc. to me. There is no help available for this code; just
+# ask if you need an explanation. Patches are welcome to fix bugs or clean up
+# the code, but please do not use a radically different coding style. Thanks
+# to everyone that's contributed!
+#
+# v2.3
+#   - Jotun's Fury max level dropped back to 174
+#   - added the Drdink's Cane of Blind Rage with item level 175-200
+#   - all time modifiers (battles, HoG, etc) are now written to modifiers.txt
+#   - function tlog() logs a string to modifiers.txt and returns the string
+#   - changed WHOAMI to not use $_
+#   - fixed another bug where changing your nick would prevent you from being
+#     a candidate for auto-login
+#   - LOGOUT command added as a p20
+#   - you may now only be logged in under one character at a time. this will
+#     help protect the bot from being flooded when a single user signs on
+#     under 10 accounts, then is penalized and warned 10 times. attempts to
+#     login under two names are not penalized
+#   - fixed a bug where all of your accounts were automatically logged on so
+#     long as they shared the same host as you, regardless of whether they
+#     were online before (on bot restart)
+#   - there is a 1/20,000 chance of a calamity occuring every 5 seconds. the
+#     calamity() function chooses a random user, then smites them with bad
+#     luck. the penalty for a calamity is a random 5-12% of next TTL. users are
+#     only chosen from the pool of online players
+#   - there is a 1/10,000 chance of a godsend occuring every 5 seconds. the
+#     godsend() function chooses a random user, then betters their luck. the
+#     award for a godsend is a random 5-12% of next TTL. users are only chosen
+#     from the pool of online players
+#   - there are now 'quests' -- six level 30+ users are chosen to go on a quest
+#     at a time. if all six users make it to the quest's end, all questers are
+#     awarded by removing 25% of their TTL (ie, their TTL at quest's end). to
+#     complete a quest, no user can be penalized until the quest's end. quests
+#     last a random time between 12 and 24 hours. if the quest is not
+#     completed, ALL online users are penalized 2% of their time as punishment.
+#     users are only chosen from the pool of online players (original idea from
+#     Nerje; quest ideas from Tristan, brt)
+#   - quests are read from file 'quests.txt' every time quest() is called. this
+#     allows you to add or remove quests while the bot is still running. quests
+#     are not picked in order, but chosen at random from the file
+#   - fixed bug in PUSH, allowing to push into negative TTL
+#   - db times changed to ctime format in lieu of scalar localtime() (now
+#     sortable)
+#   - added db fields for total time idled; total times penalized for
+#     privmsg, nick change, part, kick, LOGOUT, quest, and quit; and time
+#     account created
+#   - REGISTER no longer penalizes if you are already logged in and the
+#     command fails
+#   - fixed 'http:' checking to only look at message text, not entire string
+#   - messages passed through privmsg() are split into 450-byte chunks and
+#     then passed to their target
+#   - bans put into place by the 'http:' method are now removed after 1 hour
+#     to prevent filling the banlist. bans are stored in @bans, which will
+#     hold at most 12 bans to prevent the bot from flooding on unban. after
+#     12, bans are still set, but not stored
+#   - 'license' in header slightly changed
+#   - battle results now include item sums and the random number rolled for
+#     each player. format is [roll/sum]
+#   - bot will try to regain his nickname every 30 mins if it is in use at
+#     sign-on. added vars $primnick and $opts{'botghostcmd'}. $primnick is set
+#     to $opts{'botnick'} (which may change) on load, and $opts{'botghostcmd'}
+#     is a nickserv ghost command string
+#   - the bot's nick ($opts{'botnick'} and $primnick) cannot be registered as
+#     character names
+#   - bot is now a fightable player. his item sum is random 250-650. (someone;
+#     mail me if this was your idea). chances of fighting him are equal to
+#     fighting any other player
+#   - bot now daemonizes when starting (jwbozzy)
+#   - fixed duration code to use the correct secs/day (drdink/inkblot)
+#   - added a penalty to Team Battle. players will now receive or lose 20% of
+#     the lowest team member's TTL (drdink)
+#   - changed battling to award tie to challenger, not challengee. random
+#     number is also, now, an integer, not a float
+#   - every 3.5 hours, a level 45+, online player will battle; this will make
+#     it easier for high-level users to level
+#   - added function itemsum() to return item sum for supplied username
+#   - battle results written to battles.txt are now timestamped (Juliet)
+# v2.2.2 (schmolli)
+#   * The changes in this version are based almost completely on a patch sent
+#     to me by Ed Schmollinger, schmolli@IRC. Many thanks to him for his help!
+#     Here are his changes:
+#   - SECURITY: added subroutine mksalt to generate random salt for passwds
+#   - CLEANUP: added subroutines chanmsg and privmsg to send messages to
+#     bot's channel and to a specified user, respectively
+#   - FEATURE: added command line argument processing and removed TEST_MODE
+#     (TEST_MODE is no longer necessary.)  Part of this includes moving most
+#     of the variables into %opts.
+#   - FIX: added check for number of existing players when printing top 3
+#   - CLEANUP: changed "in:" and "out:" debug message to "<-" and "->"
+#   - CLEANUP: indented concatenated lines
+# v2.2.1
+#   - fixed a bug in item finding; if unique item was better than helm, not
+#     better than its class, you would get the item (emad)
+# v2.2
+#   - added 1/20000 chance of 'team battle' every 5 seconds. team battle is
+#     3 players versus 3 other players. if the first three players win, their
+#     time is lowered by 20% of the lowest of the three's TTL. if they lose,
+#     no time is removed from any players. there is no chance for critical
+#     strike in a team battle (Asterax)
+#   - max level of Jotun's Fury Colossal Sword changed to 175
+#   - fixed 'kick' bug; users that were kicked were not logged out
+#   - kick added as a p250
+#   - bot now only bans those non-logged in users that say 'http:' that've
+#     been in the channel < 90 seconds
+#   - bot won't ban for #G7-type URLs
+#   - bot now shows nick of user when new account is registered
+#   - forgot to close filehandle in loaddb(); fixed
+#   - added a db backup every 6 hours
+# v2.1.3
+#   - fixed bug where users changing their nick would not be candidates for
+#     auto-login on a bot restart
+#   - changed some messages to make them more friendly to female
+#     players (LapCat)
+# v2.1.2
+#   - HoG can now carry or displace a player 5 - 75% toward the next level
+#   - fixed CTCP version bug
+#   - battling was changed from all users within 7 levels of you to
+#     all online users
+#   - added "unique" items, or a chance starting at level 25 to roll
+#     higher-than-normal items
+# v2.1.1
+#   - DIE, JUMP, RESTART, INFO, and PEVAL now send warnings to users that
+#     don't have access to tell them so. they are still penalized
+#   - bot will now penalize users without the proper access that try to use an
+#     admin command
+#   - add commands CHCLASS, CHUSER, and PUSH to adjust class names, usernames,
+#     and next time to level, respectively
+#   - HoG could occur for offline users; this is no longer the case
+#   - bot now responds to CTCP version requests (drdink)
+# v2.1
+#   - bot bans non-logged-in users that say 'http:'
+#   - INFO did not check ha(); fixed
+#   - bot will automagically log you back in if you were logged in before
+#     a bot restart, and if you haven't changed your nick!user@host since then
+#   - removed logging
+#   - dropped functions relating to old database in favor of the new one
+#   - changed level up report from seconds to duration()
+#   - changed item/userinfo db's to one file; battles still in battles.txt
+#   - changed challenge report from seconds to duration()
+#   - changed penalty text to display duration() instead of seconds
+#   - added critical strike, 1/35 chance upon winning battle to cause opponent
+#     to lose time (dwyn)
+#   - changed summon text for HoG (res0)
+#   - changed access to base off of irpg username in lieu of host
+#   - changed top player report to every 6 hours
+#   - changed positive HoG text (res0)
+#   - changed random HoG chance to 1/20000 every 5 seconds
+# v2.0.3
+#   - dropped top players back to 3
+#   - removed STATUS; TTL available through website.
+#   - battle history added to website; added logging of battles to battles.txt
+#   - peval did not next(); fixed.
+#   - added HOG command, randomly chooses someone, then randomly raises/lowers
+#     their TTL (20% raise, 80% lower). HOG is, of course, an abbreviation for
+#     Hand of God
+#   - added a 1/7500 random HoG into rpcheck()
+# v2.0.2
+#   - STATUS would log you out; fixed.
+#   - could STATUS if not online; fixed.
+#   - added DEL command to remove accounts
+#   - added ALERT command to make channel alerts
+#   - changed admin HELP command text to display website
+# v2.0.1
+#   - fixed self-battle bug
+#   - changed chance to battle from 20% to 25% if level < 25, 100% if >= 25
+#   - setup companion website
+#   - updated HELP command to reflect website
+#   - changed battle gain to (max(7,opplevel/4)/100)*your_next_ttl
+#   - added battle loss of (max(7,opplevel/7)/100)*your_next_ttl
+# v2.0
+#   - added item finding and battling
+#   - added penalties for QUIT, PART, instead of resetting time to the
+#     beginning of that level
+# v1.0
+#   - initial version
+
+use strict 'all';
+use warnings 'all';
+use IO::Socket;
+use Data::Dumper;
+use Getopt::Long;
+
+my $version = "2.3";
+(my $prog = $0) =~ s/^.*\///;
+
+my %opts = (
+  'server' => 'area51.slashnet.org:6667',
+  'botnick' => 'bot',
+  'botuser' => 'bot',
+  'botrlnm' => 'http://www.slashnet.org/~bot/',
+  'botchan' => '#g7',
+  'botident' => 'identify ilovedink',
+  'botopcmd' => 'chanserv op #g7 bot',
+  'botghostcmd' => 'nickserv ghost bot ilovedink',
+  'helpurl' => 'http://jotun.ultrazone.org/g7/',
+  'admincommurl' => 'http://jotun.ultrazone.org/g7/admincomms.txt',
+  'access' => [ 'yawnwraith', 'jotun', 'drdink' ],
+  'rpstep' => 1.16,
+  'rpbase' => 600,
+  'rppenstep' => 1.14,
+  'dbfile' => 'irpg.db',
+  'debug' => 0,
+);
+
+GetOptions(\%opts,
+  "help|h",
+  "verbose|v",
+  "debug",
+  "server|s=s",
+  "botnick|n=s",
+  "botuser|u=s",
+  "botrlnm|r=s",
+  "botchan|c=s",
+  "botident|p=s",
+  "botopcmd|o=s",
+  "botghostcmd|g=s",
+  "helpurl=s",
+  "admincommurl=s",
+  "access=s@",
+  "rpstep=f",
+  "rpbase=i",
+  "rppenstep=f",
+  "dbfile|irpgdb|db|d=s",
+) or die("error parsing command line\n");
+
+$opts{'help'} and do { help(); exit 0; };
+my $debug = $opts{'debug'} || 0;
+my $v = $opts{'verbose'} || $debug;
+
+my $outbytes = 0; # sent bytes
+my $primnick = $opts{'botnick'}; # for regain or register checks
+my $inbytes = 0; # received bytes
+my %onchan; # users on game channel
+my %rps; # role-players
+my $rpreport = 0; # constant for reporting top players
+my $alrmint = 5; # secs between database rewrites
+my @prev_online; # user@hosts online on restart, die
+my @auto_login; # users to automatically log back on
+my @bans; # bans auto-set by the bot, saved to be removed after 1 hour
+my @questers; # accounts currently in a quest
+my $questtime = time() + int(rand(21600)); # time to end quest, or start one
+
+daemonize();
+
+$SIG{'HUP'} = 0; # ignore sighup
+
+CONNECT: # cheese.
+loaddb();
+my $sock = IO::Socket::INET->new(PeerAddr=>$opts{'server'},PeerPort=>6667);
+die("Could not build socket; $!") unless $sock;
+
+sts("NICK $opts{'botnick'}");
+sts("USER $opts{'botuser'} 0 0 :$opts{'botrlnm'}");
+
+while (<$sock>) {
+  $inbytes += length;
+  s/[\r\n]//g;
+  print "<- $_\n" if $debug;
+  my @arg = split/ /;
+  if (lc($arg[0]) eq 'ping') { sts("PONG $arg[1]"); }
+  if ($arg[1] eq '433' && $opts{'botnick'} eq $arg[3]) {
+    $opts{'botnick'} .= 0;
+    sts("NICK $opts{'botnick'}");
+  }
+  if (lc($arg[1]) eq 'join') {
+    my $usernick = (split(/!/,$arg[0]))[0];
+    $usernick = substr($usernick,1);
+    $onchan{$usernick}=time();
+  }
+  if (lc($arg[1]) eq 'quit') {
+    my $usernick = (split(/!/,$arg[0]))[0];
+    $usernick = substr($usernick,1);
+    for my $k (keys %rps) {
+      if (exists $rps{$k}{nick} && $rps{$k}{nick} eq $usernick
+          && $rps{$k}{online}) {
+        $rps{$k}{next}+=int(20 * ($opts{'rppenstep'}**$rps{$k}{level}));
+        $rps{$k}{pen_quit}+=int(20 * ($opts{'rppenstep'}**$rps{$k}{level}));
+        questpencheck($k);
+        $rps{$k}{online}=0;
+      }
+    }
+    delete $onchan{$usernick};
+  }
+  if (lc($arg[1]) eq 'nick') {
+    my $usernick = (split(/!/,$arg[0]))[0];
+    $usernick = substr($usernick,1);
+    for my $k (keys %rps) {
+      if (exists $rps{$k}{nick} && $rps{$k}{nick} eq $usernick
+          && $rps{$k}{online}) {
+        $rps{$k}{next}+=int(30 * ($opts{'rppenstep'}**$rps{$k}{level}));
+        $rps{$k}{pen_nick}+=int(30 * ($opts{'rppenstep'}**$rps{$k}{level}));
+        $rps{$k}{nick} = substr($arg[2],1);
+        substr($rps{$k}{userhost},0,length $usernick) = substr($arg[2],1);
+        questpencheck($k);
+        sts("NOTICE $rps{$k}{nick} :Penalty of ".
+            duration(int(30 * ($opts{'rppenstep'}**$rps{$k}{level}))).
+            " added to your timer for nick change.");
+      }
+    }
+    $onchan{substr($arg[2],1)} = delete $onchan{$usernick};
+  }
+  if (lc($arg[1]) eq 'part') {
+    my $usernick = (split(/!/,$arg[0]))[0];
+    $usernick = substr($usernick,1);
+    for my $k (keys %rps) {
+      if (exists $rps{$k}{nick} &&
+          $rps{$k}{nick} eq $usernick && $rps{$k}{online}) {
+        $rps{$k}{pen_part}+=int(200 * ($opts{'rppenstep'}**$rps{$k}{level}));
+        $rps{$k}{next}+=int(200 * ($opts{'rppenstep'}**$rps{$k}{level}));
+        questpencheck($k);
+        sts("NOTICE $rps{$k}{nick} :Penalty of ".
+          duration(int(200 * ($opts{'rppenstep'}**$rps{$k}{level}))).
+            " added to your timer for parting.");
+        $rps{$k}{online}=0;
+      }
+    }
+    delete $onchan{$usernick};
+  }
+  if (lc($arg[1]) eq 'kick') {
+    my $usernick = $arg[3];
+    for my $k (keys %rps) {
+      if (exists $rps{$k}{nick} &&
+          $rps{$k}{nick} eq $usernick && $rps{$k}{online}) {
+        $rps{$k}{next}+=int(250 * ($opts{'rppenstep'}**$rps{$k}{level}));
+        $rps{$k}{pen_kick}+=int(250 * ($opts{'rppenstep'}**$rps{$k}{level}));
+        questpencheck($k);
+        sts("NOTICE $rps{$k}{nick} :Penalty of ".
+            duration(int(250 * ($opts{'rppenstep'}**$rps{$k}{level}))).
+            " added to your timer for getting kicked.");
+        $rps{$k}{online}=0;
+      }
+    }
+    delete $onchan{$usernick};
+  }
+  if (lc($arg[1]) eq '315') {
+    if (@auto_login) {
+      chanmsg(scalar @auto_login . " users matching " .
+          scalar @prev_online." hosts automatically logged in; accounts: ".
+          join(", ",@auto_login));
+    }
+    else {
+      chanmsg("0 users qualified for auto login.");
+    }
+    undef @prev_online;
+    undef @auto_login;
+  }
+  if (lc($arg[1]) eq '352') {
+    $onchan{$arg[7]}=time();
+    for my $k (keys %rps) {
+      for my $host (@prev_online) {
+        if ($rps{$k}{userhost} eq $arg[7]."!".$arg[4]."\@".$arg[5] &&
+            "$k!$rps{$k}{userhost}" eq $host) {
+          $rps{$k}{online} = 1;
+          $rps{$k}{lastlogin} = time();
+          if (!scalar(grep { $_ eq $k } @auto_login)) {
+            push(@auto_login,$k);
+          }
+        }
+      }
+    }
+  }
+  if ($arg[1] eq '001') {
+    sts($opts{'botident'});
+    sts("JOIN $opts{'botchan'}");
+    sts("MODE $opts{'botchan'}");
+    sts($opts{'botopcmd'});
+    sts("WHO $opts{'botchan'}");
+    $SIG{ALRM} = \&rpcheck;
+    alarm(5);
+  }
+  if (lc($arg[1]) eq 'notice') {
+    my $usernick = (split(/!/,$arg[0]))[0];
+    $usernick = substr($usernick,1);
+    for my $k (keys %rps) {
+      if (exists $rps{$k}{nick} && $rps{$k}{nick} eq $usernick
+      && $rps{$k}{online}) {
+        $rps{$k}{next} += int((length("@arg[3..$#arg]")-1) *
+                          ($opts{'rppenstep'}**$rps{$k}{level}));
+        $rps{$k}{pen_mesg} += int((length("@arg[3..$#arg]")-1) *
+                          ($opts{'rppenstep'}**$rps{$k}{level}));
+        questpencheck($k);
+        sts("NOTICE $rps{$k}{nick} :Penalty of ".
+            duration(int((length("@arg[3..$#arg]")-1) *
+            ($opts{'rppenstep'}**$rps{$k}{level}))).
+            " added to your timer for notice.");
+      }
+    }
+  }
+  if (lc($arg[1]) eq 'privmsg') {
+    $arg[0] = substr($arg[0],1);
+    my $usernick = (split/!/,$arg[0])[0];
+    if (lc($arg[2]) eq lc($opts{'botnick'})) {
+      if (lc($arg[3]) eq ":\1version\1") {
+        sts("NOTICE $usernick :\1VERSION IRPG bot v$version by jotun; ".
+            "$opts{helpurl}\1");
+      }
+      if (lc($arg[3]) eq ":calc" && ha($usernick)) {
+        my $eq = "@arg[4..$#arg]";
+        $eq =~ s/[^\d\.\+\-\(\)\*\&\^\%\~\!\/]//g;
+        privmsg($_,$usernick) for eval $eq;
+        if ($@) {
+          privmsg("EVAL ERROR   : $@", $usernick);
+          privmsg("In expression: $eq", $usernick);
+        }
+        next();
+      }
+      if (lc($arg[3]) eq ":peval") {
+        if (!ha($usernick)) {
+          privmsg("You don't have access to PEVAL.", $usernick);
+        }
+        else {
+          privmsg($_, $usernick) for eval "@arg[4..$#arg]";
+          privmsg("EVAL ERROR: $@", $usernick) if $@;
+          next();
+        }
+      }
+      if (lc($arg[3]) eq ":register") {
+        my $onflag=0;
+        for my $k (keys %rps) {
+          if ($rps{$k}{nick} eq $usernick && $rps{$k}{online}) {
+            privmsg("Sorry, you are already online as $k.",$usernick);
+            $onflag=1;
+            last();
+          }
+        }
+        next() if $onflag;
+        if ($#arg < 6 || $arg[6] eq "") {
+          privmsg("Try: REGISTER <char name> <password> <class>", $usernick);
+          privmsg("IE : REGISTER Poseidon MyPassword God of the Sea",
+                  $usernick);
+        }
+        elsif (exists $rps{$arg[4]}) {
+          privmsg("Sorry, that character name is already in use.", $usernick);
+        }
+        elsif (lc($arg[4]) eq lc($opts{'botnick'}) ||
+               lc($arg[4]) eq lc($primnick)) {
+          privmsg("Sorry, that character name cannot be registered.",
+                  $usernick);
+        }
+        elsif (!exists($onchan{$usernick})) {
+          privmsg("Sorry, you're not in $opts{botchan}.", $usernick);
+        }
+        elsif (length($arg[4]) > 16) {
+          privmsg("Sorry, character names must be < 17 chars long.",
+                  $usernick);
+        }
+        elsif ($arg[4] =~ /^#/) {
+          privmsg("Sorry, character names may not begin with #.", $usernick);
+        }
+        elsif (length("@arg[6..$#arg]") > 30) {
+          privmsg("Sorry, character classes must be < 31 chars long.",
+                  $usernick);
+        }
+        else {
+          $rps{$arg[4]}{next} = $opts{'rpbase'};
+          $rps{$arg[4]}{class} = "@arg[6..$#arg]";
+          $rps{$arg[4]}{level} = 0;
+          $rps{$arg[4]}{online} = 1;
+          $rps{$arg[4]}{nick} = $usernick;
+          $rps{$arg[4]}{userhost} = $arg[0];
+          $rps{$arg[4]}{created} = time();
+          $rps{$arg[4]}{lastlogin} = time();
+          $rps{$arg[4]}{pass} = crypt($arg[5],mksalt());
+          chanmsg("Welcome $usernick"."'s new player $arg[4], the " .
+                  "@arg[6..$#arg]! Next level in ".duration($opts{'rpbase'}).
+                  ".");
+          privmsg("Success! Account $arg[4] created. You have $opts{rpbase} ".
+                  "seconds idleness until you reach level 1. ", $usernick);
+          privmsg("NOTE: The point of the game is to see who can idle the ".
+                  "longest. As such, talking (to channel or the bot), ".
+                  "parting, quitting, and changing nicks penalize you.",
+                  $usernick);
+        }
+        next();
+      }
+      if (lc($arg[3]) eq ":del") {
+        if (!ha($usernick)) {
+          privmsg("You don't have access to del.", $usernick);
+        }
+        else {
+          if (!defined $arg[4]) {
+            privmsg("Try: DEL <char name>", $usernick);
+          }
+          else {
+            if (exists $rps{$arg[4]}) {
+              delete $rps{$arg[4]};
+              chanmsg("Account $arg[4] removed by $arg[0].");
+            }
+            else {
+              privmsg("No such account $arg[4].", $usernick);
+            }
+          }
+          next();
+        }
+      }
+      if (lc($arg[3]) eq ":alert") {
+        if (!ha($usernick)) {
+          privmsg("You don't have access to ALERT.", $usernick);
+        }
+        else {
+          if (!defined $arg[4]) {
+            privmsg("Try: ALERT <message>", $usernick);
+          }
+          else {
+            chanmsg("ALERT from $usernick: @arg[4..$#arg]");
+          }
+          next();
+        }
+      }
+      if (lc($arg[3]) eq ":hog") {
+        if (!ha($usernick)) {
+          privmsg("You don't have access to HOG.", $usernick);
+        }
+        else {
+          chanmsg("$usernick has summoned the Hand of God.");
+          hog();
+          next();
+        }
+      }
+      if (lc($arg[3]) eq ":chpass") {
+        if (!ha($usernick)) {
+          privmsg("You don't have access to CHPASS.", $usernick);
+        }
+        else {
+          if (!defined $arg[5]) {
+            privmsg("Try: CHPASS <char name> <new pass>", $usernick);
+          }
+          else {
+            if (exists $rps{$arg[4]}) {
+              $rps{$arg[4]}{pass} = crypt($arg[5],mksalt());
+              privmsg("Password for $arg[4] changed.", $usernick);
+            }
+            else {
+              privmsg("No such username $arg[4].", $usernick);
+            }
+          }
+          next();
+        }
+      }
+      if (lc($arg[3]) eq ":chuser") {
+        if (!ha($usernick)) {
+          privmsg("You don't have access to CHUSER.", $usernick);
+        }
+        else {
+          if (!defined $arg[5]) {
+            privmsg("Try: CHUSER <char name> <new char name>", $usernick);
+          }
+          elsif (!exists $rps{$arg[4]}) {
+            privmsg("No such username $arg[4].", $usernick);
+          }
+          elsif (exists $rps{$arg[5]}) {
+            privmsg("Username $arg[5] is already taken.", $usernick);
+          }
+          else {
+            $rps{$arg[5]} = delete $rps{$arg[4]};
+            privmsg("Username for $arg[4] changed to $arg[5].", $usernick);
+          }
+          next();
+        }
+      }
+      if (lc($arg[3]) eq ":chclass") {
+        if (!ha($usernick)) {
+          privmsg("You don't have access to CHCLASS.", $usernick);
+        }
+        else {
+          if (!defined $arg[5]) {
+            privmsg("Try: CHCLASS <char name> <new char class>", $usernick);
+          }
+          else {
+            if (exists $rps{$arg[4]}) {
+              $rps{$arg[4]}{class} = "@arg[5..$#arg]";
+              privmsg("Class for $arg[4] changed to @arg[5..$#arg].",
+                      $usernick);
+            }
+            else {
+              privmsg("No such username $arg[4].", $usernick);
+            }
+          }
+          next();
+        }
+      }
+      if (lc($arg[3]) eq ":push") {
+        if (!ha($usernick)) {
+          privmsg("You don't have access to PUSH.", $usernick);
+        }
+        elsif (!defined $arg[5]) {
+            privmsg("Try: PUSH <char name> <seconds>", $usernick);
+        }
+        elsif (exists $rps{$arg[4]}) {
+          if ($arg[5] > $rps{$arg[4]}{next}) {
+            privmsg("Time to level for $arg[4] ($rps{$arg[4]}{next}s) is ".
+                    "lower than $arg[5].", $usernick);
+          }
+          else {
+            $rps{$arg[4]}{next} -= $arg[5];
+            privmsg("Time to level for $arg[4] pushed ahead ".
+                    "$arg[5] seconds. $arg[4] reaches next level in ".
+                    duration($rps{$arg[4]}{next}).".", $usernick);
+            chanmsg("$usernick has pushed $arg[4] $arg[5] ".
+                    "seconds toward level ".($rps{$arg[4]}{level}+1).
+                    ". $arg[4] reaches next level in ".
+                    duration($rps{$arg[4]}{next}).".");
+          }
+          next();
+        }
+        else {
+          privmsg("No such username $arg[4].", $usernick);
+          next();
+        }
+      }   
+      if (lc($arg[3]) eq ":logout") {
+        my $f = 0;
+        for my $k (keys %rps) {
+          if ($rps{$k}{nick} eq $usernick && $rps{$k}{online}) {
+            $rps{$k}{next} += int(20 * ($opts{'rppenstep'}**$rps{$k}{level}));
+            $rps{$k}{pen_logout} +=
+              int(20 * ($opts{'rppenstep'}**$rps{$k}{level}));
+            questpencheck($k);
+            sts("NOTICE $usernick :Penalty of ".
+                duration(int(20 * ($opts{'rppenstep'}**$rps{$k}{level}))).
+                " added to your timer for LOGOUT command.");
+            $rps{$k}{online}=0;
+            $f=1
+          }
+        }
+        privmsg("You are not logged in.", $usernick) if !$f;
+        next();
+      }
+      if (lc($arg[3]) eq ":whoami") {
+        my $f=0;
+        for my $k (keys %rps) {
+          if (exists $rps{$k}{nick} && $rps{$k}{nick} eq $usernick
+              && $rps{$k}{online}) {
+            privmsg("You are logged in as $k.", $usernick);
+            $f=1;
+          }
+        }
+        privmsg("You are not logged in.", $usernick) if !$f;
+        next();
+      }
+      if (lc($arg[3]) eq ":help") {
+        if (!ha($usernick)) {
+          privmsg("To register a new account: ".
+                  "/msg $opts{botnick} REGISTER", $usernick);
+          privmsg("To login to an account: ".
+                  "/msg $opts{botnick} LOGIN", $usernick);
+          privmsg("If you forget your password, ask for help ".
+                  "in the channel.", $usernick);
+          privmsg("For more info, see $opts{helpurl}", $usernick);
+        }
+        else {
+          privmsg("Help URL is $opts{helpurl}", $usernick);
+          privmsg("Admin commands URL is $opts{admincommurl}", $usernick);
+        }
+        next();
+      }
+      if (lc($arg[3]) eq ":die") {
+        if (!ha($usernick)) {
+          privmsg("You do not have access to DIE.", $usernick);
+        }
+        else {
+          sts("QUIT :DIE from $arg[0]");
+          next();
+        }
+      }
+      if (lc($arg[3]) eq ":jump") {
+        if (!ha($usernick)) {
+          privmsg("You do not have access to JUMP.", $usernick);
+        }
+        elsif (!defined $arg[4]) {
+          privmsg("Try JUMP <server[:port]>", $usernick);
+        }
+        else {
+          sts("QUIT :JUMP to $arg[4] from $arg[0]");
+          $opts{'server'} = $arg[4];
+          close $sock;
+          sleep 3;
+          goto CONNECT;
+        }
+      }
+      if (lc($arg[3]) eq ":restart") {
+        if (!ha($usernick)) {
+          privmsg("You do not have access to RESTART.", $usernick);
+        }
+        else {
+          sts("QUIT :RESTART from $arg[0]");
+          exec("perl $0");
+        }
+      }
+      if (lc($arg[3]) eq ":info") {
+        if (!ha($usernick)) {
+          privmsg("You do not have access to INFO.", $usernick);
+        }
+        else {
+          my $info = sprintf("%.2fkb sent, %.2fkb received in %s. ".
+                             "%d IRPG users online.",
+                             $outbytes/1024,$inbytes/1024,duration(time-$^T),
+                             scalar(grep { $rps{$_}{online} } keys %rps));
+          privmsg($info, $usernick);
+          next();
+        }
+      }
+      if (lc($arg[3]) eq ":login") {
+        my $onflag=0;
+        for my $k (keys %rps) {
+          if ($rps{$k}{nick} eq $usernick && $rps{$k}{online}) {
+            privmsg("Sorry, you are already online as $k.",$usernick);
+            $onflag=1;
+            last();
+          }
+        }
+        next() if $onflag;
+        if ($#arg < 5 || $arg[5] eq "") {
+          privmsg("Try: LOGIN <username> <password>", $usernick);
+        }
+        elsif (!exists $rps{$arg[4]}) {
+          privmsg("Sorry, no such account name. Note ".
+                  "that account names are case sensitive.", $usernick);
+        }
+        elsif (!exists $onchan{$usernick}) {
+          privmsg("Sorry, you're not in $opts{botchan}.", $usernick);
+        }
+        elsif ($rps{$arg[4]}{pass} ne crypt($arg[5],$rps{$arg[4]}{pass})) {
+          privmsg("Wrong password.", $usernick);
+        }
+        else {
+          $rps{$arg[4]}{online} = 1;
+          $rps{$arg[4]}{nick} = $usernick;
+          $rps{$arg[4]}{userhost} = $arg[0];
+          $rps{$arg[4]}{lastlogin} = time();
+          chanmsg("$arg[4], the level $rps{$arg[4]}{level} ".
+                  "$rps{$arg[4]}{class}, is now online from nickname ".
+                  "$usernick. Next level in ".duration($rps{$arg[4]}{next}).
+                  ".");
+          privmsg("Logon successful. Next level in ".
+                  duration($rps{$arg[4]}{next}).".", $usernick);
+        }
+        next();
+      }
+    }
+    my $found = 0;
+    for my $k (keys %rps) {
+      if (exists $rps{$k}{nick} && $rps{$k}{nick} eq $usernick &&
+          $rps{$k}{online}) {
+        $rps{$k}{next} += int((length("@arg[3..$#arg]")-1) *
+                          ($opts{'rppenstep'}**$rps{$k}{level}));
+        $rps{$k}{pen_mesg} += int((length("@arg[3..$#arg]")-1) *
+                              ($opts{'rppenstep'}**$rps{$k}{level}));
+        questpencheck($k);
+        sts("NOTICE $rps{$k}{nick} :Penalty of ".
+            duration(int((length("@arg[3..$#arg]")-1) *
+            ($opts{'rppenstep'}**$rps{$k}{level}))).
+            " added to your timer for privmsg.");
+        $found=1;
+      }
+    }
+    if (!$found && "@arg[3..$#arg]" =~ /http:/i &&
+        (time()-$onchan{$usernick}) < 90 && "@arg[3..$#arg]" !~ /ultrazone/i) {
+      sts("MODE $opts{botchan} +b $arg[0]");
+      sts("KICK $opts{botchan} $usernick :No advertising; ban will be ".
+          "lifted in one hour.");
+      push(@bans,$arg[0]) if @bans < 12;
+    }
+  }
+}
+
+print "Disconnected.\n" if $v || $debug;
+
+sub sts { # send to server
+  my $text = shift;
+  print $sock "$text\r\n";
+  print "-> $text\n" if $debug;
+  $outbytes += length($text) + 2;
+}
+
+sub ha { # return 0/1 if username has access
+  my $nick = shift;
+  for my $k (keys %rps) {
+    if ($rps{$k}{nick} eq $nick && $rps{$k}{online}) {
+      for my $l (@{$opts{'access'}}) { return 1 if $l eq $k; }
+    }
+  }
+  return 0;
+}
+
+sub duration { # return human duration of seconds
+  my $s = shift;
+  return "NA ($s)" if $s !~ /^\d+$/;
+  return sprintf("%d day%s, %02d:%02d:%02d",$s/86400,($s/86400)==1?"":"s",
+                 ($s%86400)/3600,($s%3600)/60,($s%60));
+}
+
+sub ts { # timestamp
+  my @ts = localtime(time);
+  return sprintf("[%02d/%02d/%02d %02d:%02d:%02d] ",
+                 $ts[4]+1,$ts[3],$ts[5]%100,$ts[2],$ts[1],$ts[0]);
+}
+
+sub hog { # summon the hand of god
+  my @players = grep { $rps{$_}{online} } keys %rps;
+  my $player = $players[rand @players];
+  my $win = int(rand(5));
+  my $time = int(((5 + int(rand(70)))/100) * $rps{$player}{next});
+  if ($win) {
+    chanmsg(tlog("Verily I say unto thee, the Heavens have burst forth, and ".
+            "the blessed hand of God carried $player ".duration($time).
+            " toward level ".($rps{$player}{level}+1)."."));
+    $rps{$player}{next} -= $time;
+  }
+  else {
+    chanmsg(tlog("Thereupon He stretched out His little finger ".
+            "among them and consumed $player with fire, slowing the heathen ".
+            duration($time)." from level ".($rps{$player}{level}+1)."."));
+    $rps{$player}{next} += $time;
+  }
+  chanmsg("$player reaches next level in ".duration($rps{$player}{next}).".");
+}
+
+sub rpcheck { # check levels, update database
+  hog() if rand(20000) < 1;
+  team_battle() if rand(20000) < 1;
+  calamity() if rand(20000) < 1;
+  godsend() if rand(10000) < 1;
+  if (time() > $questtime) {
+    if (!@questers) { quest(); }
+    else {
+      chanmsg(tlog(join(", ",@questers)." have blessed the realm by ".
+              "completing their quest! 25% of their burden is eliminated."));
+      $rps{$_}{next} = int($rps{$_}{next} * .75) for @questers;
+      undef @questers;
+      $questtime = time() + 21600;
+    }
+  }
+  if ($rpreport%4320==0) { # 4320 = six hours, if $alrmint is 5 seconds
+    my @u = sort { $rps{$b}{level} <=> $rps{$a}{level} ||
+                   $rps{$a}{next}  <=> $rps{$b}{next} } keys %rps;
+    chanmsg("#G7 Idle RPG Top Players:") if @u;
+    for my $i (0..2) {
+      $#u >= $i and
+      chanmsg("$u[$i], the level $rps{$u[$i]}{level} ".
+              "$rps{$u[$i]}{class}, is #" . ($i + 1) . "! Next level in ".
+              (duration($rps{$u[$i]}{next})).".");
+    }
+    system("cp $opts{dbfile} .dbbackup/$opts{dbfile}".time());
+  }
+  if ($rpreport%2520==0 && $rpreport) { # 2520 = 3.5 hours if $alrmint is 5s
+    my @players = grep { $rps{$_}{online} && $rps{$_}{level} > 44 } keys %rps;
+    if (@players) { challenge_opp($players[int rand @players]); }
+  }
+  if ($rpreport%720==0 && $rpreport) {
+    while (@bans) {
+      sts("MODE $opts{'botchan'} -bbbb :@bans[0..3]");
+      splice(@bans,0,4);
+    }
+  }
+  if ($rpreport%360==0) { # 360=30 mins. also, try on first go.
+    if ($opts{'botnick'} ne $primnick) {
+      sts($opts{'botghostcmd'}) if $opts{'botghostcmd'};
+      sts("NICK $primnick");
+    }
+  }
+  open(RPS,">$opts{dbfile}") or die("Cannot write $opts{dbfile}: $!");
+
+  print RPS "# username\tpass\tlevel\tclass\tnext\tnick\tuserhost\tonline\t".
+            "idled\tpen_mesg\tpen_nick\tpen_part\tpen_kick\tpen_quit\t".
+            "pen_quest\tpen_logout\tcreated\tlast login\tamulet\tcharm\t".
+            "helm\tboots\tgloves\tring\tleggings\tshield\ttunic\tweapon\n";
+  for my $k (keys %rps) {
+    if ($rps{$k}{online} && exists $rps{$k}{nick} &&
+        $rps{$k}{nick} && exists $onchan{$rps{$k}{nick}}) {
+      $rps{$k}{next}-=$alrmint;
+      $rps{$k}{idled}+=$alrmint;
+      if ($rps{$k}{next} < 1) {
+        $rps{$k}{level}++;
+        $rps{$k}{next} = int($opts{'rpbase'}*
+                             ($opts{'rpstep'}**$rps{$k}{level}));
+        chanmsg("$k, the $rps{$k}{class}, has attained level $rps{$k}{level}!".
+                " Next level in ".duration($rps{$k}{next}).".");
+        find_item($k);
+        challenge_opp($k);
+      }
+    }
+    if (exists $rps{$k}{next} && defined $rps{$k}{next}) { # not db anomaly
+       print RPS join("\t",
+         $k,
+         $rps{$k}{pass},
+         $rps{$k}{level},
+         $rps{$k}{class},
+         $rps{$k}{next},
+         $rps{$k}{nick}||"",
+         $rps{$k}{userhost}||"",
+         $rps{$k}{online}||0,
+         $rps{$k}{idled}||0,
+         $rps{$k}{pen_mesg}||0,
+         $rps{$k}{pen_nick}||0,
+         $rps{$k}{pen_part}||0,
+         $rps{$k}{pen_kick}||0,
+         $rps{$k}{pen_quit}||0,
+         $rps{$k}{pen_quest}||0,
+         $rps{$k}{pen_logout}||0,
+         $rps{$k}{created},
+         $rps{$k}{lastlogin},
+         $rps{$k}{item}{amulet}||0,
+         $rps{$k}{item}{charm}||0,
+         $rps{$k}{item}{helm}||0,
+         $rps{$k}{item}{"pair of boots"}||0,
+         $rps{$k}{item}{"pair of gloves"}||0,
+         $rps{$k}{item}{ring}||0,
+         $rps{$k}{item}{"set of leggings"}||0,
+         $rps{$k}{item}{shield}||0,
+         $rps{$k}{item}{tunic}||0,
+         $rps{$k}{item}{weapon}||0)."\n";
+    }
+  }
+  close RPS;
+  ++$rpreport;
+  $SIG{ALRM} = \&rpcheck;
+  alarm($alrmint);
+}
+
+sub challenge_opp { # pit argument player against random player
+  my $u = shift;
+  if ($rps{$u}{level} < 25) { return unless rand(4) < 1; }
+  my @opps = grep { $rps{$_}{online} && $u ne $_ } keys %rps;
+  return unless @opps;
+  my $opp = $opps[int rand @opps];
+  $opp = $primnick if rand(@opps+1) < 1;
+  my $mysum = itemsum($u);
+  my $oppsum = itemsum($opp);
+  my $myroll = int(rand($mysum));
+  my $opproll = int(rand($oppsum));
+  if ($myroll >= $opproll) {
+    my $gain = int($rps{$opp}{level}/4);
+    $gain = 7 if $gain < 7;
+    $gain = int(($gain/100)*$rps{$u}{next});
+    chanmsg(tlog("$u [$myroll/$mysum] has challenged $opp [$opproll/$oppsum] ".
+              "in combat and won! ".duration($gain)." is removed from $u".
+              "'s clock."));
+    $rps{$u}{next} -= $gain;
+    if (rand(35) < 1) {
+      $gain = int(((5 + int(rand(20)))/100) * $rps{$opp}{next});
+      chanmsg(tlog("$u has dealt $opp a Critical Strike! ".duration($gain).
+             " is added to $opp"."'s clock."));
+      $rps{$opp}{next} += $gain;
+    }
+  }
+  else {
+    my $gain = int($rps{$opp}{level}/7);
+    $gain = 7 if $gain < 7;
+    $gain = int(($gain/100)*$rps{$u}{next});
+    chanmsg(tlog("$u [$myroll/$mysum] has challenged $opp [$opproll/$oppsum] ".
+              "in combat and lost! ".duration($gain)." is added to $u".
+              "'s clock."));
+    $rps{$u}{next} += $gain;
+  }
+  delete $rps{$primnick}; # cheap hack
+}
+
+sub team_battle { # pit three players against three other players
+  my @opp = grep { $rps{$_}{online} } keys %rps;
+  return if @opp < 6;
+  splice(@opp,int rand @opp,1) while @opp > 6;
+  my $mysum = itemsum($opp[0]) + itemsum($opp[1]) + itemsum($opp[2]);
+  my $oppsum = itemsum($opp[3]) + itemsum($opp[4]) + itemsum($opp[5]);
+  my $gain = $rps{$opp[0]}{next};
+  for my $p (1,2) {
+    $gain = $rps{$opp[$p]}{next} if $gain > $rps{$opp[$p]}{next};
+  }
+  $gain = int($gain*.20);
+  if (rand($mysum) >= rand($oppsum)) {
+    chanmsg(tlog("$opp[0], $opp[1], and $opp[2] have team battled $opp[3], ".
+            "$opp[4], and $opp[5] and won! ".duration($gain)." is removed ".
+            "from their clocks."));
+    $rps{$opp[0]}{next} -= $gain;
+    $rps{$opp[1]}{next} -= $gain;
+    $rps{$opp[2]}{next} -= $gain;
+  }
+  else {
+    chanmsg(tlog("$opp[0], $opp[1], and $opp[2] have team battled $opp[3], ".
+            "$opp[4], and $opp[5] and lost! ".duration($gain)." is added to ".
+            "their clocks."));
+    $rps{$opp[0]}{next} += $gain;
+    $rps{$opp[1]}{next} += $gain;
+    $rps{$opp[2]}{next} += $gain;
+  }
+}
+
+sub find_item { # find item for argument player
+  my $u = shift;
+  my @items = ("ring","amulet","charm","weapon","helm","tunic",
+               "pair of gloves","set of leggings","shield","pair of boots");
+  my $type = $items[rand @items];
+  my $level = 1;
+  for my $num (1 .. int($rps{$u}{level}*1.5)) {
+    if (rand(1.4**($num/4)) < 1) {
+      $level = $num;
+    }
+  }
+  if ($rps{$u}{level} >= 25 && rand(40) < 1) {
+    my $ulevel = 50+int(rand(25));
+    if ($ulevel >= $level && $ulevel > $rps{$u}{item}{helm}) {
+      sts("NOTICE $rps{$u}{nick} :The light of the gods shines upon you! ".
+          "You have found the level $ulevel Mattt's Omniscience Grand Crown! ".
+          "Your enemies fall before you as you anticipate their every move.");
+      $rps{$u}{item}{helm} = $ulevel;
+    }
+  }
+  elsif ($rps{$u}{level} >= 30 && rand(40) < 1) {
+    my $ulevel = 75+int(rand(25));
+    if ($ulevel >= $level && $ulevel > $rps{$u}{item}{tunic}) {
+      sts("NOTICE $rps{$u}{nick} :The light of the gods shines upon you! ".
+          "You have found the level $ulevel Res0's Protectorate Plate Mail! ".
+          "Your enemies cower in fear as their attacks have no effect on ".
+          "you.");
+      $rps{$u}{item}{tunic} = $ulevel;
+    }
+  }
+  elsif ($rps{$u}{level} >= 35 && rand(40) < 1) {
+    my $ulevel = 100+int(rand(25));
+    if ($ulevel >= $level && $ulevel > $rps{$u}{item}{amulet}) {
+      sts("NOTICE $rps{$u}{nick} :The light of the gods shines upon you! ".
+          "You have found the level $ulevel Dwyn's Storm Magic Amulet! ".
+          "Your enemies are swept away by an elemental fury before the war ".
+          "has even begun.");
+      $rps{$u}{item}{amulet} = $ulevel;
+    }
+  }
+  elsif ($rps{$u}{level} >= 40 && rand(40) < 1) {
+    my $ulevel = 150+int(rand(25));
+    if ($ulevel >= $level && $ulevel > $rps{$u}{item}{weapon}) {
+      sts("NOTICE $rps{$u}{nick} :The light of the gods shines upon you! ".
+          "You have found the level $ulevel Jotun's Fury Colossal Sword! ".
+          "Your enemies' hatred is brought to a quick end as you arc ".
+          "your wrist, dealing the crushing blow.");
+      $rps{$u}{item}{weapon} = $ulevel;
+    }
+  }
+  elsif ($rps{$u}{level} >= 45 && rand(40) < 1) {
+    my $ulevel = 175+int(rand(26));
+    if ($ulevel >= $level && $ulevel > $rps{$u}{item}{weapon}) {
+      sts("NOTICE $rps{$u}{nick} :The light of the gods shines upon you! ".
+          "You have found the level $ulevel Drdink's Cane of Blind Rage! ".
+          "Your enemies are tossed aside as you blindly swing your arm ".
+          "around hitting stuff.");
+      $rps{$u}{item}{weapon} = $ulevel;
+    }
+  }
+  elsif ($level > $rps{$u}{item}{$type}) {
+    sts("NOTICE $rps{$u}{nick} :You found a level $level $type! Your ".
+        "current $type is only level ".(0+$rps{$u}{item}{$type}).", so ".
+        "it seems Luck is with you.");
+    $rps{$u}{item}{$type} = $level;
+  }
+  else {
+    sts("NOTICE $rps{$u}{nick} :You found a level $level $type. Your ".
+        "current $type is level ".(0+$rps{$u}{item}{$type}).", so ".
+        "it seems Luck is against you. You toss the $type.");
+  }
+}
+
+
+sub loaddb { # load the players database
+  undef %rps;
+  %rps = (); # redundant?
+  if (!open(RPS,$opts{dbfile}) && -e $opts{dbfile}) {
+    die("loaddb() failed: $!");
+  }
+  while (my $l=<RPS>) {
+    chomp $l;
+    next if $l =~ /^#/; # skip comments
+    my @i = split("\t",$l);
+    print Dumper @i if @i != 28;
+    die("Anomaly in loaddb(); line $. of $opts{dbfile} has wrong fields (".
+      scalar @i.")") if @i != 28;
+    if ($i[7]) { push(@prev_online,"$i[0]!$i[6]"); } # log back in
+    ($rps{$i[0]}{pass},
+    $rps{$i[0]}{level},
+    $rps{$i[0]}{class},
+    $rps{$i[0]}{next},
+    $rps{$i[0]}{nick},
+    $rps{$i[0]}{userhost},
+    $rps{$i[0]}{online},
+    $rps{$i[0]}{idled},
+    $rps{$i[0]}{pen_mesg},
+    $rps{$i[0]}{pen_nick},
+    $rps{$i[0]}{pen_part},
+    $rps{$i[0]}{pen_kick},
+    $rps{$i[0]}{pen_quit},
+    $rps{$i[0]}{pen_quest},
+    $rps{$i[0]}{pen_logout},
+    $rps{$i[0]}{created},
+    $rps{$i[0]}{lastlogin},
+    $rps{$i[0]}{item}{amulet},
+    $rps{$i[0]}{item}{charm},
+    $rps{$i[0]}{item}{helm},
+    $rps{$i[0]}{item}{"pair of boots"},
+    $rps{$i[0]}{item}{"pair of gloves"},
+    $rps{$i[0]}{item}{ring},
+    $rps{$i[0]}{item}{"set of leggings"},
+    $rps{$i[0]}{item}{shield},
+    $rps{$i[0]}{item}{tunic},
+    $rps{$i[0]}{item}{weapon}) = (@i[1..6],0,@i[8..$#i]);
+  }
+  close RPS;
+}
+
+sub mksalt { # generate a random salt for passwds
+  join '',('a'..'z','A'..'Z','0'..'9','/','.')[rand 64, rand 64];
+}
+
+sub chanmsg { # send a message to the channel
+  my $msg = shift or return undef;
+  privmsg($msg, $opts{'botchan'});
+}
+
+sub privmsg { # send a message to an arbitrary entity
+  my $msg = shift or return undef;
+  my $target = shift or return undef;
+  while (length($msg)) {
+    sts("PRIVMSG $target :".substr($msg,0,450));
+    $msg = substr($msg,450);
+  }
+}
+
+sub help { # print help message
+	print "
+usage: $prog [OPTIONS]
+  --help, -h           Print this message
+  --verbose, -v        Print verbose messages
+  --server, -s         Specify IRC server:port to connect to
+  --botnick, -n        Bot's IRC nick
+  --botuser, -u        Bot's username
+  --botrlnm, -r        Bot's real name
+  --botchan, -c        IRC channel to join
+  --botident, -p       Specify identify-to-services command
+  --botopcmd, -o       Specify command to send to server on successful connect
+  --botghostcmd, -g    Specify command to send to server to regain primary
+                       nickname when in use
+  --helpurl            URL to refer new users to
+  --admincommurl       URL to refer admins to
+  --access             Usernames allowed to issue admin commands
+
+  Timing parameters:
+  --rpbase             Base time to level up
+  --rpstep             Time to next level = rpbase * (rpstep ** CURRENT_LEVEL)
+  --rppenstep          PENALTY_SECS=(PENALTY*(RPPENSTEP**CURRENT_LEVEL))
+
+";
+}
+
+sub itemsum {
+  my $user = shift;
+  if ($user eq $primnick) { return int(250 + rand(401)); }
+  if (not exists $rps{$user}) { return -1; }
+  my $sum = 0;
+  $sum += $rps{$user}{item}{$_} for keys %{$rps{$user}{item}};
+  return $sum;
+}
+
+sub daemonize() {
+  if ($v || $debug) { return; } # don't lose valuable messages
+  use POSIX 'setsid';
+  $SIG{CHLD} = IGNORE;
+  fork() && exit(0); # kill parent
+  POSIX::setsid() || die("POSIX::setsid() failed: $!");
+  $SIG{CHLD} = IGNORE;
+  fork() && exit(0); # kill the parent as the process group leader
+  $SIG{CHLD} = IGNORE;
+
+  open(STDIN,'/dev/null') || die("Cannot read /dev/null: $!");
+  open(STDOUT,'>/dev/null') || die("Cannot write to /dev/null: $!");
+  open(STDERR,'>/dev/null') || die("Cannot write to /dev/null: $!");
+  $0 = $opts{'botnick'};
+}
+
+sub calamity { # suffer a little one
+  my @players = grep { $rps{$_}{online} } keys %rps;
+  return unless @players;
+  my $player = $players[rand @players];
+  my $time = int(int(5 + rand(8)) / 100 * $rps{$player}{next});
+  my @actions = ("was bitten by drdink","fell into a hole",
+                 "bit their tongue","set themself on fire",
+                 "ate a poisonous fruit","lost their mind",
+                 "died, temporarily..","was caught in a terrible snowstorm",
+                 "EXPLODED, somewhat..","got knifed in a dark alley",
+                 "saw an episode of Ally McBeal",
+                 "got turned INSIDE OUT, practically");
+  my $actioned = $actions[rand @actions];
+  chanmsg(tlog("$player $actioned. This terrible calamity has slowed them ".
+          duration($time)." from level ".($rps{$player}{level}+1)."."));
+  $rps{$player}{next} += $time;
+  chanmsg("$player reaches next level in ".duration($rps{$player}{next}).".");
+}
+
+sub godsend { # bless the unworthy
+  my @players = grep { $rps{$_}{online} } keys %rps;
+  return unless @players;
+  my $player = $players[rand @players];
+  my $time = int(int(5 + rand(8)) / 100 * $rps{$player}{next});
+  my @actions = ("found a pair of Nikes","caught a unicorn",
+                 "discovered a secret, underground passage",
+                 "was taught to quicken his pace by a secret tribe of ".
+                   "pygmies that know how to run fast",
+                 "discovered caffinated coffee","grew an extra leg");
+  my $actioned = $actions[rand @actions];
+  chanmsg(tlog("$player $actioned. This wondrous godsend has accelerated them ".
+          duration($time)." towards level ".($rps{$player}{level}+1)."."));
+  $rps{$player}{next} -= $time;
+  chanmsg("$player reaches next level in ".duration($rps{$player}{next}).".");
+}
+
+sub quest {
+  @questers = grep { $rps{$_}{online} && $rps{$_}{level} > 29 } keys %rps;
+  if (@questers < 6) { return undef @questers; }
+  splice(@questers,int rand @questers,1) while @questers > 6;
+  $questtime = time() + int(43200 + rand(43201));
+  open(Q,"quests.txt") or return 0;
+  while (chomp(my $line = <Q>)) { $quest = $line if rand $. < 1; }
+  close Q;
+  chanmsg(join(", ",@questers)." have been chosen by the Gods to $quest. ".
+          "Quest to end in ".duration($questtime-time()).".");
+}
+
+sub questpencheck {
+  my $k = shift;
+  for my $quester (@questers) {
+    if ($quester eq $k) {
+      chanmsg(tlog(join(", ",@questers)." have failed in their duty to the ".
+              "realm. All active users are penalized 2% of their time."));
+      for my $player (grep { $rps{$_}{online} } keys %rps) {
+        my $gain = int(.02 * $rps{$player}{next});
+        $rps{$player}{pen_quest} += $gain;
+        $rps{$player}{next} += $gain;
+      }
+      undef @questers;
+      $questtime = time() + 21600; # 6 hours
+    }
+  }
+}
+
+sub tlog {
+  my $mesg = shift;
+  open(B,">>modifiers.txt");
+  print B ts()."$mesg\n";
+  close B;
+  return $mesg;
+}

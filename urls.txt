@@ -1,0 +1,9 @@
+jotun	#g7	http://jotun.ultrazone.org/g7/	SlashNet	The Original, The Best!
+Sciribe	#lurkalot	http://www.rakka.org/idlerpg.php	irc.mircx.com	Imitation is the highest form of flattery.
+Jake	#irpg	http://gbcsports.com/irpg	GamesNET	Someone set us up the bot.
+mikegrb	#g7	http://thegrebs.com/g7/	OFTC	:-)
+PrincessLeia2	#null	http://www.princessleia.com/irc/null/	irc.xelium.net	IdleRPG on the Xelium Network
+split|	#irpg	http://games.whatnet.org	irc.whatnet.org	WhatNET rocking on. :D
+BaZz	#irpg	http://www.workingonthesite.com	irc.Undernet.org	neat game :)
+TvKe	#idling	http://mtairpg.tv2knet.net	irc.MultiTheftAuto.com	IdleRPG on the MTA Server
+total	#irpg	http://total.viskos.org/cgi/irpg.py	EFNet	Idle away =)

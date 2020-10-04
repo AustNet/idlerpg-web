@@ -1,21 +1,20 @@
-    </div>
-    <div class="footer">
-        <p class="small">
-            Questions? Comments? Suggestions? Bugs? Naked pics?
-            <a href="contact.php"><?php print $admin_email?></a> or <?php print $admin_nick?>@IRC.
-<?php
+    <hr>
+    <span class="smaller">
+      <p>
+        Questions? Comments? Suggestions? Bugs? Naked pics?
+        <a href="http://jotun.ultrazone.org/g7/contact.php">
+        fakeusername@fakedomainname.com</a> or jotun@IRC.
+        <?php
             $hits = file("hits.db");
             $fp = fopen("hits.db", "w");
-            $thispage = explode("/",$_SERVER['PHP_SELF']);
-            $thispage = array_pop($thispage);
             if ($fp == false) {
                 echo "Error: could not open file hits.db.";
             }
             foreach ($hits as $line) {
                 list($page,$numhits,$date) = explode("\t",trim($line));
-                if ($page == $thispage) {
-                    ++$numhits;
-                    echo "            $numhits hits since $date";
+                $numhits++;
+                if ($page == $_SERVER['PHP_SELF']) {
+                    echo "$numhits hits since $date";
                     $found = 1;
                 }
                 if ($fp) {
@@ -23,13 +22,12 @@
                 }
             }
             if (!$found && $fp) {
-                echo "            1 hit since ".date("M j, Y",time());
-                fwrite($fp,$thispage."\t1\t".date("M j, Y",time())."\n");
+                echo "1 hits since ".date("M j, Y",time());
+                fwrite($fp,"$_SERVER['PHP_SELF']\t1\t".date("M j, Y",time())."\n");
             }
             fclose($fp);
-?>
-
-        </p>
-    </div>
+        ?>
+      </p>
+    </span>
   </body>
 </html>

@@ -1,0 +1,28 @@
+#!/usr/bin/perl
+
+# idlerpg (5-12-2003) by barik/parallax (http://www.barik.net)
+# Usage: idlerpg [playername]
+#
+# Call this script from the command line, or your login profile.
+
+# check for valid command-line
+
+die "Usage: idlerpg [playername] ...\n" .
+    "Example: idlerpg parallax jotun Tosirap\n" if @ARGV == 0;    
+
+# open a simple web connection, and assume it connects.
+# if it does not connect, nothing is printed.
+
+use LWP::Simple;
+$_ = get 'http://jotun.ultrazone.org/g7/players.php';
+
+
+# fetch the specified username. if not found, we
+# simply do not print anything
+
+foreach $username (@ARGV) {
+
+    /<li>.*($username)<\/a>(.*)<BR>/ && print $1, $2, "\n";
+
+}
+

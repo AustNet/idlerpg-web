@@ -1,47 +1,46 @@
+<html><head><title>#G7 IRPG: Contact</title>
+<?include("header.php")?>
 <?php
-
-include("config.php");
-
-$irpg_page_title = "Contact";
-
-include("header.php");
-
-    echo "<h1>Contact</h1>";
     if ($_POST['from'] && $_POST['text']) {
-        mail($admin_email,"IRPG: ".$_POST['from'],
+        mail("jotun@ultrazone.org","contact.php",
              "Name: ".$_POST['name']."\nE-mail: ".$_POST['from']."\n\n".
-             $_POST['text'],"From: ".$_POST['from']."\r\n");
-        echo('      <blockquote>Thanks for your submission.</blockquote>');
+             $_POST['text']);
+?>
+      <blockquote>Thanks for your submission.</blockquote>
+<?php
     }
     else {
-        echo('
-        <form method="post" action="contact.php">
-          <table border="0">
+?>
+      <blockquote>
+        <form method="POST" action="contact.php">
+          <table border="0" colspan="2">
             <tr>
-              <th align="left"><label for="from">Your e-mail address</label>:</th>
-              <td align="right">
-                <input type="text" size="20" maxlength="50" name="from" id="from" />
+              <td align=left>Your e-mail address:</td>
+              <td align=right>
+                <input type="text" size="20" maxlen="50" name="from">
               </td>
             </tr>
             <tr>
-              <th align="left"><label for="name">Your name</label>:</th>
-              <td align="right">
-                <input type="text" size="20" maxlength="50" name="name" id="name" />
+              <td align=left>Your name:</td>
+              <td align=right>
+                <input type="text" size="20" maxlen="50" name="name">
               </td>
             </tr>
             <tr>
               <td colspan="2">
-                <textarea name="text" rows="6" cols="44"></textarea><br />
+                <textarea name="text" rows="6" cols="44"></textarea><br>
               </td>
             </tr>
             <tr>
-              <td colspan="2" align="right">
-                <input type="submit" value="Send" />
+              <td colspan="2" align=right>
+                <input type="submit" value="Send">
+                <input type="reset" value="Clear"><!-- nobody uses these.. -->
               </td>
             </tr>
           </table>
         </form>
-');
+      </blockquote>
+<?php
     }
-    include("footer.php");
 ?>
+<?include("footer.php")?>
