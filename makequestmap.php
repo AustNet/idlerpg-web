@@ -5,7 +5,7 @@
 
     session_start(); // sessions to generate only one map / person / 20s
     if (isset($_SESSION['time']) && time()-$_SESSION['time'] < 20) {
-        header("Location: maperror.png");
+        header("Location: images/maperror.png");
         exit(0);
     }
     $_SESSION['time']=time();
@@ -56,7 +56,7 @@
         }
     }
     if ($type != 2) {
-        header("Location: maperror.png");
+        header("Location: images/maperror.png");
         exit(0);
     }
 

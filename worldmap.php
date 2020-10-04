@@ -1,4 +1,4 @@
-<?
+<?php
     include("config.php");
     $irpg_page_title = "World Map";
     include("header.php");
@@ -11,7 +11,7 @@
 <div id="map">
     <img src="makeworldmap.php" alt="IdleRPG World Map" title="IdleRPG World Map" usemap="#world" border="0" />
     <map id="world" name="world">
-<?
+<?php
     $file = fopen($irpg_db,"r");
     fgets($file);
     while($location=fgets($file)) {
@@ -24,4 +24,4 @@
     </map>
 </div>
 
-<?include("footer.php");?>
+<?php include("footer.php");?>

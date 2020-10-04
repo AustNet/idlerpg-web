@@ -42,72 +42,72 @@
         <th NOWRAP>
           User
           (<a href="db.php?sort=cmp_user_asc">
-             <img src="up.png" border="0">
+             <img src="images/up.png" border="0">
            </a>
            /
           <a href="db.php?sort=cmp_user_desc">
-             <img src="down.png" border="0">
+             <img src="images/down.png" border="0">
           </a>)
         </th>
         <th NOWRAP>
           Level
           (<a href="db.php?sort=cmp_level_asc">
-             <img src="up.png" border="0">
+             <img src="images/up.png" border="0">
            </a>
            /
           <a href="db.php?sort=cmp_level_desc">
-             <img src="down.png" border="0">
+             <img src="images/down.png" border="0">
           </a>)
         </th>
         <th NOWRAP>
           Admin
           (<a href="db.php?sort=cmp_isadmin_asc">
-             <img src="up.png" border="0">
+             <img src="images/up.png" border="0">
            </a>
            /
           <a href="db.php?sort=cmp_isadmin_desc">
-             <img src="down.png" border="0">
+             <img src="images/down.png" border="0">
           </a>)
         </th>
         <th NOWRAP>Class</th>
         <th NOWRAP>
           TTL
           (<a href="db.php?sort=cmp_ttl_asc">
-             <img src="up.png" border="0">
+             <img src="images/up.png" border="0">
            </a>
            /
           <a href="db.php?sort=cmp_ttl_desc">
-             <img src="down.png" border="0">
+             <img src="images/down.png" border="0">
           </a>)
         </th>
         <th NOWRAP>
           Nick!User@Host
           (<a href="db.php?sort=cmp_uhost_asc">
-             <img src="up.png" border="0">
+             <img src="images/up.png" border="0">
            </a>
            /
           <a href="db.php?sort=cmp_uhost_desc">
-             <img src="down.png" border="0">
+             <img src="images/down.png" border="0">
           </a>)
         </th>
         <th NOWRAP>
           Online
           (<a href="db.php?sort=cmp_online_asc">
-             <img src="up.png" border="0">
+             <img src="images/up.png" border="0">
            </a>
            /
           <a href="db.php?sort=cmp_online_desc">
-             <img src="down.png" border="0">
+             <img src="images/down.png" border="0">
           </a>)
         </th>
         <th NOWRAP>
           Total Time Idled
           (<a href="db.php?sort=cmp_idled_asc">
-             <img src="up.png" border="0">
+             <img src="images/up.png" border="0">
            </a>
            /
           <a href="db.php?sort=cmp_idled_desc">
-             <img src="down.png" border="0">
+             <img src="images/down.png" border="0">
           </a>)
         </th>
         <th NOWRAP>X Pos</th>
@@ -122,31 +122,31 @@
         <th NOWRAP>
           Total Pen.
           (<a href="db.php?sort=cmp_pen_asc">
-             <img src="up.png" border="0">
+             <img src="images/up.png" border="0">
            </a>
            /
           <a href="db.php?sort=cmp_pen_desc">
-             <img src="down.png" border="0">
+             <img src="images/down.png" border="0">
           </a>)
         </th>
         <th NOWRAP>
           Acct. Created
           (<a href="db.php?sort=cmp_created_asc">
-             <img src="up.png" border="0">
+             <img src="images/up.png" border="0">
            </a>
            /
           <a href="db.php?sort=cmp_created_desc">
-             <img src="down.png" border="0">
+             <img src="images/down.png" border="0">
           </a>)
         </th>
         <th NOWRAP>
           Last Login
           (<a href="db.php?sort=cmp_lastlogin_asc">
-             <img src="up.png" border="0">
+             <img src="images/up.png" border="0">
            </a>
            /
           <a href="db.php?sort=cmp_lastlogin_desc">
-             <img src="down.png" border="0">
+             <img src="images/down.png" border="0">
           </a>)
         </th>
         <th NOWRAP>Amulet</th>
@@ -162,21 +162,21 @@
         <th NOWRAP>
           Sum
           (<a href="db.php?sort=cmp_sum_asc">
-             <img src="up.png" border="0">
+             <img src="images/up.png" border="0">
            </a>
            /
           <a href="db.php?sort=cmp_sum_desc">
-             <img src="down.png" border="0">
+             <img src="images/down.png" border="0">
           </a>)
         </th>
         <th NOWRAP>
           Alignment
           (<a href="db.php?sort=cmp_alignment_asc">
-             <img src="up.png" border="0">
+             <img src="images/up.png" border="0">
            </a>
            /
           <a href="db.php?sort=cmp_alignment_desc">
-             <img src="down.png" border="0">
+             <img src="images/down.png" border="0">
           </a>)
         </th>
       </tr>

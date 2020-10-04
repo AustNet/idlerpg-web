@@ -9,7 +9,7 @@
         'players.php');
     
     $irpg_page_title = "Player Info: " . htmlentities($_GET['player']);
-    $showmap = $_GET['showmap'];
+    $showmap = (isset($_GET['showmap']) ? 1 : 0);
     
     include("header.php");
     include("commonfunctions.php");
@@ -146,7 +146,7 @@
         if ($_GET['allmods'] != 1 && count($temp) > 5) {
 ?>
       <br />
-      [<a href="<?php echo $_SERVER['PHP_SELF']."?player=".urlencode($user);?>&amp;allmods=1">View all Character Modifiers</a> (<?=count($temp)?>)]
+      [<a href="<?php echo $_SERVER['PHP_SELF']."?player=".urlencode($user);?>&amp;allmods=1">View all Character Modifiers</a> (<?php echo count($temp); ?>)]
       </p>
 <?php
         }
