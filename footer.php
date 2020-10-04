@@ -4,6 +4,7 @@
             Questions? Comments? Suggestions? Bugs? Naked pics?
             <a href="contact.php"><?php print $admin_email?></a> or <?php print $admin_nick?>@IRC.
 <?php
+/* disabled - old and unused code these days
             $hits = file("hits.db");
             $fp = fopen("hits.db", "w");
             $thispage = explode("/",$_SERVER['PHP_SELF']);
@@ -27,6 +28,7 @@
                 fwrite($fp,$thispage."\t1\t".date("M j, Y",time())."\n");
             }
             fclose($fp);
+*/
 ?>
 
         </p>

@@ -86,7 +86,7 @@ a.offline { color: #707070; }
 #map {
     width: 500px;
     height: 500px;
-    background-image: url(newmap.png);
+    background-image: url(images/newmap.png);
 }
 
 

@@ -1,4 +1,4 @@
-<?
+<?php
     include("config.php");
     include("commonfunctions.php");
     $irpg_page_title = "Player Info";
@@ -34,4 +34,4 @@
 
   <p>See player stats in <a href="db.php">table format</a>.</p>
 
-<?include("footer.php")?>
+<?php include("footer.php"); ?>

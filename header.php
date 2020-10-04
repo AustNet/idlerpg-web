@@ -3,7 +3,7 @@
 
 <html>
   <head>
-    <title><?echo $irpg_chan;?> Idle RPG: <?echo $irpg_page_title;?></title>
+    <title><?php echo $irpg_chan; ?> Idle RPG: <?php echo $irpg_page_title; ?></title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <link rel="stylesheet" type="text/css" href="g7.css" />
   </head>
@@ -13,7 +13,7 @@
 
     <div class="head">
 <?php
-    echo('        <img src="'. $irpg_logo .'" alt="'. $irpg_chan .' Idle RPG" title="'. $irpg_chan .' Idle RPG" width="338" height="115" />');
+    echo('        <img src="'. $irpg_logo .'" alt="'. $irpg_chan .' Idle RPG" title="'. $irpg_chan .' Idle RPG" />');
 ?>
     </div>
 
@@ -29,8 +29,6 @@
         'Site Source' => 'http://idlerpg.net/sitesource.php',
         'World Map' => $BASEURL . 'worldmap.php',
         'Quest Info' => $BASEURL . 'quest.php',
-        'Forum' => 'http://idlerpg.net/forum.php',
-        'moo.' => 'http://cowcult.org',
     );
 
     foreach ($topbarurl as $key => $value) {

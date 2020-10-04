@@ -7,7 +7,7 @@ $irpg_page_title = "Contact";
 include("header.php");
 
     echo "<h1>Contact</h1>";
-    if ($_POST['from'] && $_POST['text']) {
+    if (isset($_POST['from']) && isset($_POST['text'])) {
         mail($admin_email,"IRPG: ".$_POST['from'],
              "Name: ".$_POST['name']."\nE-mail: ".$_POST['from']."\n\n".
              $_POST['text'],"From: ".$_POST['from']."\r\n");

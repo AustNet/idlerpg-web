@@ -13,8 +13,8 @@
     <h2>Location</h2>
     <p> 
       The Idle RPG can be played on the
-      <a href="http://www.slashnet.org/">SlashNET IRC Network</a> in the
-      channel #G7. See <a href="http://www.slashnet.org/servers/">this</a>
+      <a href="http://www.austnet.org/">AustNet IRC Network</a> in the
+      channel #irpg. See <a href="https://www.austnet.org/index.php#portfolio">this</a>
       link for a list of servers.
     </p>
     
@@ -24,7 +24,7 @@
       <p>To register, simply:</p>
       
         <code>
-          /msg <?echo $irpg_bot;?> REGISTER &lt;char name&gt; &lt;password&gt;
+          /msg <?php echo $irpg_bot; ?> REGISTER &lt;char name&gt; &lt;password&gt;
           &lt;char class&gt;
         </code>
       
@@ -37,7 +37,7 @@
       <p>To login, simply:</p>
       
         <code>
-          /msg <?echo $irpg_bot;?> LOGIN &lt;char name&gt; &lt;password&gt;
+          /msg <?php echo $irpg_bot; ?> LOGIN &lt;char name&gt; &lt;password&gt;
         </code>
       
       <p>This is a p0 (see <a href="#penalties">Penalties</a>) command.</p>
@@ -48,7 +48,7 @@
       <p>To logout, simply:</p>
       
         <code>
-          /msg <?echo $irpg_bot;?> LOGOUT
+          /msg <?php echo $irpg_bot; ?> LOGOUT
         </code>
       
       <p>This is a p20 (see <a href="#penalties">Penalties</a>) command.</p>
@@ -59,7 +59,7 @@
       <p>To change your password, simply:</p>
       
         <code>
-          /msg <?echo $irpg_bot;?> NEWPASS &lt;new password&gt;
+          /msg <?php echo $irpg_bot; ?> NEWPASS &lt;new password&gt;
         </code>
       
       <p>This is a p0 (see <a href="#penalties">Penalties</a>) command.</p>
@@ -74,7 +74,7 @@
       <p>To remove your account, simply:</p>
       
         <code>
-          /msg <?echo $irpg_bot;?> REMOVEME
+          /msg <?php echo $irpg_bot; ?> REMOVEME
         </code>
       
       <p>This is a p0 (see <a href="#penalties">Penalties</a>) command :^)</p>
@@ -85,7 +85,7 @@
       <p>To change your alignment, simply:</p>
       
         <code>
-          /msg <?echo $irpg_bot;?> ALIGN &lt;good|neutral|evil&gt;
+          /msg <?php echo $irpg_bot; ?> ALIGN &lt;good|neutral|evil&gt;
         </code>
       
       <p>This is a p0 (see <a href="#penalties">Penalties</a>) command.</p>
@@ -112,7 +112,7 @@
       <p>To see some simple information on the bot, simply:</p>
       
         <code>
-          /msg <?echo $irpg_bot;?> INFO
+          /msg <?php echo $irpg_bot; ?> INFO
         </code>
       
       <p>This is a p0 (see <a href="#penalties">Penalties</a>) command.</p>
@@ -146,7 +146,7 @@
       completion:</p>
       
         <code>
-          /msg <?echo $irpg_bot;?> QUEST
+          /msg <?php echo $irpg_bot; ?> QUEST
         </code>
       
       <p>This is a p0 (see <a href="#penalties">Penalties</a>) command.</p>
@@ -157,7 +157,7 @@
       <p>To see whether you are logged on, simply:</p>
       
         <code>
-          /msg <?echo $irpg_bot;?> WHOAMI
+          /msg <?php echo $irpg_bot; ?> WHOAMI
         </code>
       
       <p>This is a p0 (see <a href="#penalties">Penalties</a>) command.</p>
@@ -476,5 +476,5 @@
       </p>
     
 
-<?include("footer.php");?>
+<?php include("footer.php"); ?>
 
