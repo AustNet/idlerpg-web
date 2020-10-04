@@ -6,15 +6,16 @@ IRPG Website Code README v1.0 (2004-05-27)
   Notes
 -----------
 
-HOMEPAGE	http://idlerpg.net
+Homepage:	http://idlerpg.net
+License :	Public Domain
 
 -----------
  Versions
 -----------
 
 Site:	v0.4 [current/changes courtesy of Caffeen & Chewie], Released May
-        29th, 2004.
-Bot :	v3.0 [current], Released May 29th, 2004.
+        28th, 2004.
+Bot :	v3.0.2 [current], Released May 28th, 2004.
 
 ------------
 Installation
@@ -28,6 +29,18 @@ Installation
    off the option to write quest info to file, you'll have to manually edit
    some scripts to take this into account. If you disable the INFO command,
    you might want to remove it from the index.php page.
+6. Some code in this package requires that your system have GD (or have it
+   enabled in your php.ini, on Win32). If you don't want this functionality to
+   be available, edit the script playerview.php to remove the use of the map
+   and header.php to remove the links to the world map and the quest info page.
+   You can also delete the worldmap.php, makeworldmap.php, makemap.php,
+   quest.php, and makequestmap.php scripts.
+7. Edit the website ANY WAY you see fit. You don't have to keep all of the links
+   to me, I just thought they might be useful or interesting to users :^)
+8. The best way to receive support for these scripts is to post to the Help
+   section of the forum, http://idlerpg.net/forum.php, not via e-mail or IRC.
+   If you notice a bug, however, you may use any method to contact me.
+   Thanks :^)
 
 -----------
  File List
@@ -51,8 +64,6 @@ index.php
 makemap.php
 makequestmap.php
 makeworldmap.php
-maperror.png
-newmap.png
 players.php
 playerview.php
 quest.php

@@ -6,6 +6,16 @@ don't see listed here.
 Also, please note that any use of "incowrect" or other cow-related "typos" are
 NOT typos. I like cattle. A lot. Please stop fixing them :^)
 
+2004-05-31  Jon Honeycutt  <jotun@idlerpg.net>
+    * changed players.php to show offline users as gray, this style is in
+      header.php, patch from Chewie <chewie@f2o.org>
+    * changed map-drawing PHP scripts to draw a transparent image which is then
+      overlayed (using CSS) over the static newmap.png image. changed the map
+      drawing frequency to 1/user/20s as I think this greatly decreases CPU
+      usage. changed the maperror.png to something more appropriate. $mapx
+      and $mapy in config.php describe the dimensions of your map file (Rick)
+    * fixed quest.php to show proper coordinates; another evil c/p error (Rick)
+
 2004-05-23  Jon Honeycutt  <jotun@idlerpg.net>
     * changed most everything to make sense with the new database
     * edited dump.php to display data in the same format, despite the new
@@ -34,6 +44,7 @@ NOT typos. I like cattle. A lot. Please stop fixing them :^)
     * updated header.php to link to new pages and idlerpg.net forum
     * changed 'time modifiers' to 'character modifiers' as item modifiers are
       now stored, also
+
 2004-05-23  Alexander Hirzel  <chewie@f2o.org>
     * submitted a series of patches to correct, among other things, the horrible
       use of <td> where <th> was more appropriate

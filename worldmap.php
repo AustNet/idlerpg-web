@@ -8,7 +8,8 @@
 
 
 <blockquote>
-    <img src="makeworldmap.php">
+<!--    <img src="makeworldmap.php"> -->
+<div id="map"><img src="makeworldmap.php"></div>
 </blockquote>
 <br>
 

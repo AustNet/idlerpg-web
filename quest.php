@@ -78,20 +78,20 @@
         else echo    "<br>\n";
         echo "    <b>Participant 2:</b> <a href=\"playerview.php?player=".$player[2]['name']."\">".$player[2]['name']."</a><br>\n";
         if ($type == 2) {
-             echo "    &nbsp;&nbsp;<b>Position:</b> [".$player[1]['x'].",".$player[2]['y']."]<br><br>\n";
+             echo "    &nbsp;&nbsp;<b>Position:</b> [".$player[2]['x'].",".$player[2]['y']."]<br><br>\n";
         }
         else echo    "<br>\n";
         echo "    <b>Participant 3:</b> <a href=\"playerview.php?player=".$player[3]['name']."\">".$player[3]['name']."</a><br>\n";
         if ($type == 2) {
-             echo "    &nbsp;&nbsp;<b>Position:</b> [".$player[1]['x'].",".$player[3]['y']."]<br><br>\n";
+             echo "    &nbsp;&nbsp;<b>Position:</b> [".$player[3]['x'].",".$player[3]['y']."]<br><br>\n";
         }
         else echo    "<br>\n";
         echo "    <b>Participant 4:</b> <a href=\"playerview.php?player=".$player[4]['name']."\">".$player[4]['name']."</a><br>\n";
         if ($type == 2) {
-             echo "    &nbsp;&nbsp;<b>Position:</b> [".$player[1]['x'].",".$player[4]['y']."]<br><br>\n".
+             echo "    &nbsp;&nbsp;<b>Position:</b> [".$player[4]['x'].",".$player[4]['y']."]<br><br>\n".
                   "    <span class=\"head1\">Quest Map:</span> <span class=\"smaller\">[Questers are shown in blue, current goal in red]</span><br>\n".
                   "    <blockquote>\n".
-                  "        <img src=\"makequestmap.php\" alt=\"Idle RPG Quest Map\"><br>\n".
+                  "        <div id=\"map\"><img src=\"makequestmap.php\" alt=\"Idle RPG Quest Map\"></div><br>\n".
                   "    </blockquote>\n";
         }
         else echo    "<br>\n";

@@ -12,6 +12,16 @@
 
     a { text-decoration: none; }
     a:hover { text-decoration: underline; color: black; }
+    /* Styles for the userlist */
+    li.online { font-weight: bold; }
+    li.offline { color: #c0c0c0; }
+    a.offline { color: #707070; }
+    #map {
+        width: <?php print $mapx?>px;
+        height: <?php print $mapy?>px;
+        background-image: url(newmap.png);
+    }
+
 -->
 </style>
 </head>
@@ -41,10 +51,10 @@ echo('
     $c = 1;
     foreach ($topbarurl as $key => $value) {
         if ($topbarurl[$key] ==  $_SERVER['PHP_SELF']) {
-            echo $key, ' ';
+            echo "  $key ";
         }
         else {
-            echo "<a href=\"$value\">$key</a> ";
+            echo "  <a href=\"$value\">$key</a> ";
         }
         echo ($c == count($topbarurl)) ? "\n" : "| \n";
         ++$c;

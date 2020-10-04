@@ -3,8 +3,8 @@
     $file = fopen($irpg_db,"r");
     fgets($file);
 
-    session_start(); // sessions to generate only one map / person / minute
-    if (time()-$_SESSION['time'] < 60) {
+    session_start(); // sessions to generate only one map / person / 20s
+    if (time()-$_SESSION['time'] < 20) {
         header("Location: maperror.png");
         exit(0);
     }
@@ -61,7 +61,9 @@
     }
 
     header("Content-type: img/png");
-    $map = imageCreateFromPNG("newmap.png");
+    $map = imageCreate(500,500);
+    $magenta = imageColorAllocate($map, 255, 0, 255);
+    imageColorTransparent($map,$magenta);
     $blue = imageColorAllocate($map, 0, 128, 255);
     $red = imageColorAllocate($map, 255, 0, 0);
 

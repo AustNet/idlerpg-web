@@ -69,7 +69,7 @@
              "    </div>\n\n".
              
              "    <p><span class=\"head1\">Map:</span></p>\n".
-             "    <blockquote><img src=\"makemap.php?player=$user\"></blockquote>\n\n".
+             "    <blockquote><div id=\"map\"><img src=\"makemap.php?player=$user\"></div></blockquote>\n\n".
              
              "    <p><span class=\"head1\">Items:</span></p>\n".
              "    <blockquote>\n";

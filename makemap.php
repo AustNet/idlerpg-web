@@ -1,13 +1,13 @@
 <?
     include("config.php");
-    session_start(); // sessions to generate only one map / person / minute
-    if (time()-$_SESSION['time'] < 60) {
+    session_start(); // sessions to generate only one map / person / 20s
+    if (time()-$_SESSION['time'] < 20) {
         header("Location: maperror.png");
         exit(0);
     }
     $_SESSION['time']=time();
     header("Content-type: img/png");
-    $map = imageCreateFromPNG("newmap.png");
+    $map = imageCreate(500,500);
 
     $user = substr($_GET['player'],0,30);
 
@@ -36,6 +36,8 @@
         if ($y+$height > 500) {
             $stringy = $y - ($height/2)-2;
         }
+        $magenta = imageColorAllocate($map,255,0,255);
+        imageColorTransparent($map,$magenta);
         $brown = imagecolorallocate($map, 102, 51, 0);
         $parchment = imagecolorallocate($map, 255, 255, 204);
     
