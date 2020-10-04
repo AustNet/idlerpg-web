@@ -14,7 +14,7 @@
     <p> 
       The Idle RPG can be played on the
       <a href="http://www.austnet.org/">AustNet IRC Network</a> in the
-      channel #G7. See <a href="https://www.austnet.org/index.php#portfolio">this</a>
+      channel #irpg. See <a href="https://www.austnet.org/index.php#portfolio">this</a>
       link for a list of servers.
     </p>
     
