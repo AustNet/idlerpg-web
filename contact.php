@@ -4,7 +4,7 @@
     if ($_POST['from'] && $_POST['text']) {
         mail("jotun@ultrazone.org","contact.php",
              "Name: ".$_POST['name']."\nE-mail: ".$_POST['from']."\n\n".
-             $_POST['text']);
+             $_POST['text'],"From: ".$_POST['from']."\r\n");
 ?>
       <blockquote>Thanks for your submission.</blockquote>
 <?php

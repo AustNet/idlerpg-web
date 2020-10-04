@@ -3,7 +3,7 @@
       <p>
         Questions? Comments? Suggestions? Bugs? Naked pics?
         <a href="http://jotun.ultrazone.org/g7/contact.php">
-        fakeusername@fakedomainname.com</a> or jotun@IRC.
+        jotun@ultrazone.org</a> or jotun@IRC.
         <?php
             $hits = file("hits.db");
             $fp = fopen("hits.db", "w");

@@ -214,5 +214,5 @@
 ?>
     </table>
     <BR><BR>
-    * Accounts created before Aug 29, 2003 may have incowrect data fields.
+    * Accounts created before Aug 29, 2003 may have incorrect data fields.
 <?include("footer.php")?>

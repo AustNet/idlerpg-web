@@ -1,0 +1,23 @@
+2004-04-05  Jon Honeycutt  <jotun@ultrazone.org>
+	* removed some of parallax's tabs :^)
+	* edited players.php to forward requests for specific players to the proper
+	  playerview.php
+	* changed links in sitesource.php to be fully-qualified
+	* removed preg_grep in playerview.php, which insecurely used tainted
+	  data. switched to stristr. (thanks mike@ethernal.org)
+	* stripped < and > from modifiers.txt output (thanks mike@ethernal.org)
+	* changed link to idlerpg-adv.txt in players.php to be fully-qualified.
+	  (thanks daxxar)
+	* may've made other changes, not sure.
+
+2004-02-15  Jon Honeycutt  <jotun@ultrazone.org>
+	* edited source.php to provide fully-qualified URLs to source files;
+	  easier for users to follow license.
+	* playerview.php's 'View all Time Modifiers' link now displays the
+	  number of time modifiers.
+	* contact.php now sends a From: field in its headers parameter.
+
+2004-01-31  Titus Barik  <titus@barik.net>
+	* created ChangeLog, following Debian ChangeLog format.
+	* modified header.php to be location independent via $BASE_URL var.
+	* players.php and playerview.php are now separate files.
