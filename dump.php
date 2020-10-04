@@ -16,6 +16,7 @@
     unset($header[31]); // alignment
     echo join("\t",$header)."\n";
     unset($file[0]);
+    /* specific character requested */
     if ($_GET['player']) {
         foreach ($file as $line) {
             list($user) = explode("\t",trim($line));
@@ -67,6 +68,7 @@
         }
         exit(0);
     }
+    /* no specific character requested; list all */
     usort($file,"cmp_level_desc");
     foreach ($file as $line) {
         list($user,,,

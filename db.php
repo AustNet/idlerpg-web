@@ -1,11 +1,12 @@
 <?php
 
-include("config.php");
-
-echo('<html><head><title>'. $irpg_chan .' Idle RPG: DB-style Player Listing</title>');
-
-include("header.php");
-include("commonfunctions.php");
+    include("config.php");
+    
+    $irpg_page_title = "DB-style Player Listing";
+    
+    include("header.php");
+    
+    include("commonfunctions.php");
 
     $file = file($irpg_db);
     unset($file[0]);
@@ -36,7 +37,7 @@ include("commonfunctions.php");
         ($_GET['sort'] != "cmp_sum_desc"))) $_GET['sort'] = "cmp_level_desc";
     usort($file,$_GET['sort']);
 ?>
-    <table border=1 cellpadding=2 cellspacing=2>
+    <table border=1 cellpadding=2 cellspacing=2 cols="32" rows="<?php print count($file); ?>">
       <tr>
         <th NOWRAP>
           User

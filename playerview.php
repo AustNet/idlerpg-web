@@ -1,24 +1,24 @@
 <?php
-
     include("config.php");
 
     $_GET['player'] = substr($_GET['player'],0,30);
 
     /* Determine if a Player was entered. If not, redirect. */
-    if ($_GET['player']=="") header('Location: players.php');
+    if ($_GET['player']=="") header('Location: http://'.$_SERVER['SERVER_NAME'].
+        ($_SERVER['SERVER_PORT']!=80?':'.$_SERVER['SERVER_PORT']:'').$BASEURL.
+        'players.php');
     
-    echo('<html><head><title>'. $irpg_chan .' Idle RPG: Player Info: ');
-    echo $_GET['player'];
-    echo('</title>');
+    $irpg_page_title = "Player Info: " . htmlentities($_GET['player']);
+    $showmap = $_GET['showmap'];
     
     include("header.php");
     include("commonfunctions.php");
-    
+    echo "<h1>Player Info</h1>";
     $file = fopen($irpg_db,"r");
-    fgets($file); // skip top comment
+    fgets($file,1024); // skip top comment
     $found=0;
-    while ($line=fgets($file)) {
-    	if (substr($line,0,strlen($_GET['player'])+1) == $_GET['player']."\t") {
+    while ($line=fgets($file,1024)) {
+        if (substr($line,0,strlen($_GET['player'])+1) == $_GET['player']."\t") {
             list($user,,$isadmin,$level,$class,$secs,,$uhost,$online,$idled,
                  $x,$y,
                  $pen['mesg'],
@@ -46,33 +46,26 @@
             break;
         }
     }
-    if (!$found) echo "<p><b>Error</b>: No such user</p>\n";
+    if (!$found) echo "<h1>Error</h1><p><b>No such user.</b></p>\n";
     else {
-        $class = str_replace("<","&lt;",$class);
-        $user = str_replace("<","&lt;",$user);
-        $class = str_replace(">","&gt;",$class);
-        $user = str_replace(">","&gt;",$user);
-        echo "    <div style=\"padding-left: 15px;\">\n".
-             "      <b>User:</b> $user<br>\n".
-             "      <b>Class:</b> $class<br>\n".
-             "      <b>Admin?:</b> ".($isadmin?"yes":"no")."<br>\n".
-             "      <b>Level:</b> $level<br>\n".
-             "      <b>Next level:</b> ".duration($secs)."<br>\n".
-             "      <b>Status:</b> O".($online?"n":"ff")."line<br>\n".
-             "      <b>Host:</b> ".($uhost?$uhost:"Unknown")."<br>\n".
-             "      <b>Account Created:</b> ".date("D M j H:i:s Y",$created)."<br>\n".
-             "      <b>Last login:</b> ".date("D M j H:i:s Y",$lastlogin)."<br>\n".
-             "      <b>Total time idled:</b> ".duration($idled)."<br>\n".
-             "      <b>Current position:</b> [$x,$y]<br>\n".
-             "      <b>Alignment:</b> ".($alignment=='e'?"Evil":($alignment=='n'?"Neutral":"Good"))."<br>\n".
-             "      <b>XML:</b> [<a href=\"xml.php?player=$user\">link</a>]<br>\n".
-             "    </div>\n\n".
-             
-             "    <p><span class=\"head1\">Map:</span></p>\n".
-             "    <blockquote><div id=\"map\"><img src=\"makemap.php?player=$user\"></div></blockquote>\n\n".
-             
-             "    <p><span class=\"head1\">Items:</span></p>\n".
-             "    <blockquote>\n";
+        $class=htmlentities($class);
+        /* if we htmlentities($user), then we cannot use links with it. */
+        echo "      <p><b>User:</b> ".htmlentities($user)."<br />\n".
+             "      <b>Class:</b> $class<br />\n".
+             "      <b>Admin?:</b> ".($isadmin?"Yes":"No")."<br />\n".
+             "      <b>Level:</b> $level<br />\n".
+             "      <b>Next level:</b> ".duration($secs)."<br />\n".
+             "      <b>Status:</b> O".($online?"n":"ff")."line<br />\n".
+             "      <b>Host:</b> ".($uhost?$uhost:"Unknown")."<br />\n".
+             "      <b>Account Created:</b> ".date("D M j H:i:s Y",$created)."<br />\n".
+             "      <b>Last login:</b> ".date("D M j H:i:s Y",$lastlogin)."<br />\n".
+             "      <b>Total time idled:</b> ".duration($idled)."<br />\n".
+             "      <b>Current position:</b> [$x,$y]<br />\n".
+             "      <b>Alignment:</b> ".($alignment=='e'?"Evil":($alignment=='n'?"Neutral":"Good"))."<br />\n".
+             "      <b>XML:</b> [<a href=\"xml.php?player=".urlencode($user)."\">link</a>]</p>\n".
+             "    <h2>Map</h2>\n".
+             "    ".($showmap?"<div id=\"map\"><img src=\"makemap.php?player=".urlencode($user)."\"></div>\n\n":"<p><a href=\"?player=".urlencode($user)."&showmap=1\">Show map</a></p>\n\n")."".
+             "    <h2>Items</h2>\n<p>";
         ksort($item);
         $sum = 0;
         foreach ($item as $key => $val) {
@@ -101,25 +94,25 @@
             if ($key == "ring" && substr($val,-1,1) == "h") {
                 $val = intval($val)." [<font color=\"$uniquecolor\">Juliet's Glorious Ring of Sparkliness</font>]";
             }
-            echo "      $key: $val<br>\n";
+            echo "      $key: $val<br />\n";
             $sum += $val;
         }
-        echo "      <br>\n      sum: $sum<br>\n".
-             "    </blockquote>".
-             "    <p><span class=\"head1\">Penalties:</span></p>\n".
-             "    <blockquote>\n";
+        echo "      <br />\n      sum: $sum<br />\n".
+             "    </p>".
+             "    <h2>Penalties</h2>\n".
+             "    <p>\n";
 
         ksort($pen);
         $sum = 0;
         foreach ($pen as $key => $val) {
-            echo "      $key: ".duration($val)."<br>\n";
+            echo "      $key: ".duration($val)."<br />\n";
             $sum += $val;
         }
-        echo "      <br>\n      total: ".duration($sum)."<br>\n";
+        echo "      <br />\n      total: ".duration($sum)."</p>\n";
 
         $file = fopen($irpg_mod,"r");
         $temp = array();
-        while ($line=fgets($file)) {
+        while ($line=fgets($file,1024)) {
             if (strstr($line," ".$_GET['player']." ")          ||
                 strstr($line," ".$_GET['player'].", ")         ||
                 substr($line,0,strlen($_GET['player'])+1) ==
@@ -131,34 +124,30 @@
         }
         fclose($file);
         if (!is_null($temp) && count($temp)) {
-            echo('</blockquote><p><span class="head1">');
+            echo('<h2>');
             echo $_GET['allmods']!=1?"Recent ":"";
-            echo('Character Modifiers:</span></p><blockquote>');
-    
+            echo('Character Modifiers</h2><p>');
             if ($_GET['allmods'] == 1 || count($temp) < 6) {
                 foreach ($temp as $line) {
-                    $line=trim($line);
-                    $line = str_replace("<","&lt;",$line);
-                    $line = str_replace(">","&gt;",$line);
-                    echo "      $line<BR>\n";
+                    $line=htmlentities(trim($line));
+                    echo "      $line<br />\n";
                 }
-                echo "      <BR>\n";
+                echo "      <br />\n";
             }
             else {
                 end($temp);
                 for ($i=0;$i<4;++$i) prev($temp);
                 for ($line=trim(current($temp));$line;$line=trim(next($temp))) {
-                    $line = str_replace("<","&lt;",$line);
-                    $line = str_replace(">","&gt;",$line);
-                    echo "      $line<BR>\n";
+                    $line=htmlentities(trim($line));
+                    echo "      $line<br />\n";
                 }
             }
         }
         if ($_GET['allmods'] != 1 && count($temp) > 5) {
 ?>
-      <BR>
-      [<a href="<?php echo $_SERVER['PHP_SELF']."?player=".$_GET['player'];?>&allmods=1">View all Character Modifiers</a> (<?=count($temp)?>)]
-      <BR>
+      <br />
+      [<a href="<?php echo $_SERVER['PHP_SELF']."?player=".urlencode($user);?>&amp;allmods=1">View all Character Modifiers</a> (<?=count($temp)?>)]
+      </p>
 <?php
         }
     }

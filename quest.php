@@ -1,11 +1,12 @@
 <?php
     include("config.php");
-    echo('<html><head><title>'.$irpg_chan.' Idle RPG: Quest Info</title>');
+    $irpg_page_title = "Quest Info";
     include("header.php");
+    echo "        <h1>Current Quest</h1>\n";
     include("commonfunctions.php");
     $file = fopen($irpg_qfile,"r");
     $type=0;
-    while ($line=fgets($file)) {
+    while ($line=fgets($file,1024)) {
         $arg = explode(" ",trim($line));
         if ($arg[0] == "T") {
             unset($arg[0]);
@@ -54,48 +55,64 @@
         }
     }
     if (!$type) {
-        echo "<blockquote>Sorry, there is no active quest.</blockquote>\n";
+        echo "        <p>Sorry, there is no active quest.</p>\n";
     }
     else {
-        echo "<div style=\"padding-left: 15px\">\n".
-             "    <b>Quest:</b> To $text.<br><br>\n";
+        echo "        <p><b>Quest:</b> To $text.</p>\n";
         if ($type == 1) {
-            echo "    <b>Time to completion:</b> ".duration($time-time()).
-                 "<br><br>\n";
+            echo "        <p><b>Time to completion:</b> ".duration($time-time()).
+                 "</p>\n";
         }
         elseif ($type == 2) {
             if ($stage == 1) {
-                echo "    <b>Current goal:</b> [$p1[0],$p1[1]]<br><br>\n";
+                echo "        <p><b>Current goal:</b> [$p1[0],$p1[1]]</p>\n";
             }
             else {
-                echo "    <b>Current goal:</b> [$p2[0],$p2[1]]<br><br>\n";
+                echo "        <p><b>Current goal:</b> [$p2[0],$p2[1]]</p>>\n";
             }
         }
-        echo "    <b>Participant 1:</b> <a href=\"playerview.php?player=".$player[1]['name']."\">".$player[1]['name']."</a><br>\n";
+        echo "        <p><b>Participant 1:</b> <a href=\"playerview.php?player=".
+             urlencode($player[1]['name'])."\">".htmlentities($player[1]['name']).
+             "</a><br />\n";
         if ($type == 2) {
-             echo "    &nbsp;&nbsp;<b>Position:</b> [".$player[1]['x'].",".$player[1]['y']."]<br><br>\n";
+             echo "        <b>Position:</b> [".$player[1]['x'].",".$player[1]['y']."]</p>\n";
         }
-        else echo    "<br>\n";
-        echo "    <b>Participant 2:</b> <a href=\"playerview.php?player=".$player[2]['name']."\">".$player[2]['name']."</a><br>\n";
+        else echo    "<br />\n";
+        echo "        <p><b>Participant 2:</b> <a href=\"playerview.php?player=".
+             urlencode($player[2]['name'])."\">".htmlentities($player[2]['name']).
+             "</a><br />\n";
         if ($type == 2) {
-             echo "    &nbsp;&nbsp;<b>Position:</b> [".$player[2]['x'].",".$player[2]['y']."]<br><br>\n";
+             echo "        <b>Position:</b> [".$player[2]['x'].",".$player[2]['y']."]</p>\n";
         }
-        else echo    "<br>\n";
-        echo "    <b>Participant 3:</b> <a href=\"playerview.php?player=".$player[3]['name']."\">".$player[3]['name']."</a><br>\n";
+        else echo    "<br />\n";
+        echo "        <p><b>Participant 3:</b> <a href=\"playerview.php?player=".
+             urlencode($player[3]['name'])."\">".htmlentities($player[3]['name']).
+             "</a><br />\n";
         if ($type == 2) {
-             echo "    &nbsp;&nbsp;<b>Position:</b> [".$player[3]['x'].",".$player[3]['y']."]<br><br>\n";
+             echo "        <b>Position:</b> [".$player[3]['x'].",".$player[3]['y']."]</p>\n";
         }
-        else echo    "<br>\n";
-        echo "    <b>Participant 4:</b> <a href=\"playerview.php?player=".$player[4]['name']."\">".$player[4]['name']."</a><br>\n";
+        else echo    "<br />\n";
+        echo "        <p><b>Participant 4:</b> <a href=\"playerview.php?player=".
+             urlencode($player[4]['name'])."\">".htmlentities($player[4]['name']).
+             "</a><br />\n";
         if ($type == 2) {
-             echo "    &nbsp;&nbsp;<b>Position:</b> [".$player[4]['x'].",".$player[4]['y']."]<br><br>\n".
-                  "    <span class=\"head1\">Quest Map:</span> <span class=\"smaller\">[Questers are shown in blue, current goal in red]</span><br>\n".
-                  "    <blockquote>\n".
-                  "        <div id=\"map\"><img src=\"makequestmap.php\" alt=\"Idle RPG Quest Map\"></div><br>\n".
-                  "    </blockquote>\n";
+             echo "        <b>Position:</b> [".$player[4]['x'].",".$player[4]['y']."]</p>\n".
+                  "        <h2>Quest Map:</h2>\n".
+                  "        <p>[Questers are shown in blue, current goal in red]</p>\n".
+                  "        <div id=\"map\"><img src=\"makequestmap.php\" alt=\"Idle RPG Quest Map\" usemap=\"#quest\" border=\"0\" /></div>\n".
+                  "        <map id=\"quest\" name=\"quest\">\n".
+                  "            <area shape=\"circle\" coords=\"".$player[1]['x'].",".$player[1]['y'].",6\" alt=\"".htmlentities($player[1]['name']).
+                  "\" href=\"playerview.php?player=".urlencode($player[1]['name'])."\" title=\"".htmlentities($player[1]['name'])."\" />\n".
+                  "            <area shape=\"circle\" coords=\"".$player[2]['x'].",".$player[2]['y'].",6\" alt=\"".htmlentities($player[2]['name']).
+                  "\" href=\"playerview.php?player=".urlencode($player[2]['name'])."\" title=\"".htmlentities($player[2]['name'])."\" />\n".
+                  "            <area shape=\"circle\" coords=\"".$player[3]['x'].",".$player[3]['y'].",6\" alt=\"".htmlentities($player[3]['name']).
+                  "\" href=\"playerview.php?player=".urlencode($player[3]['name'])."\" title=\"".htmlentities($player[3]['name'])."\" />\n".
+                  "            <area shape=\"circle\" coords=\"".$player[4]['x'].",".$player[4]['y'].",6\" alt=\"".htmlentities($player[4]['name']).
+                  "\" href=\"playerview.php?player=".urlencode($player[4]['name'])."\" title=\"".htmlentities($player[4]['name'])."\" />\n".
+                  "        </map>\n";
         }
-        else echo    "<br>\n";
+        else echo    "<br />\n";
     }
-    echo "<br>\n";
+    echo "        <br />\n";
     include("footer.php");
 ?>

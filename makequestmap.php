@@ -1,17 +1,17 @@
 <?
     include("config.php");
     $file = fopen($irpg_db,"r");
-    fgets($file);
+    fgets($file,1024);
 
     session_start(); // sessions to generate only one map / person / 20s
-    if (time()-$_SESSION['time'] < 20) {
+    if (isset($_SESSION['time']) && time()-$_SESSION['time'] < 20) {
         header("Location: maperror.png");
         exit(0);
     }
     $_SESSION['time']=time();
         $file = fopen($irpg_qfile,"r");
     $type=0;
-    while ($line=fgets($file)) {
+    while ($line=fgets($file,1024)) {
         $arg = explode(" ",trim($line));
         if ($arg[0] == "Y") {
             $type = $arg[1];
@@ -60,7 +60,6 @@
         exit(0);
     }
 
-    header("Content-type: img/png");
     $map = imageCreate(500,500);
     $magenta = imageColorAllocate($map, 255, 0, 255);
     imageColorTransparent($map,$magenta);

@@ -1,12 +1,11 @@
 <?
     include("config.php");
     session_start(); // sessions to generate only one map / person / 20s
-    if (time()-$_SESSION['time'] < 20) {
+    if (isset($_SESSION['time']) && time()-$_SESSION['time'] < 20) {
         header("Location: maperror.png");
         exit(0);
     }
     $_SESSION['time']=time();
-    header("Content-type: img/png");
     $map = imageCreate(500,500);
 
     $user = substr($_GET['player'],0,30);
@@ -16,14 +15,14 @@
     $file = file($irpg_db);
     unset($file[0]);
 
-	foreach ($file as $line) {
-		list($username,,,,,,,,,,$x,$y) = explode("\t",trim($line));
-		if ($username == $user) {
+    foreach ($file as $line) {
+        list($username,,,,,,,,,,$x,$y) = explode("\t",trim($line));
+        if ($username == $user) {
             $stringx = $x;
             $stringy = $y;
             break;
         }
-	}
+    }
     if ($stringx == $stringy && $stringx == -1) {
         imageString($map,5,200,245,"NO SUCH USER",imagecolorallocate($map,255,0,0));
     }

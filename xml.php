@@ -8,12 +8,14 @@
     $_GET['player'] = substr($_GET['player'],0,30);
 
     /* Determine if a Player was entered. If not, redirect. */
-    if ($_GET['player']=="") header('Location: players.php');
+    if ($_GET['player']=="") header('Location: http://'.$_SERVER['SERVER_NAME'].
+        ($_SERVER['SERVER_PORT']!=80?':'.$_SERVER['SERVER_PORT']:'').$BASEURL.
+        'players.php');
 
     $file = fopen($irpg_db,"r");
-    fgets($file); // skip top comment
+    fgets($file,1024); // skip top comment
 
-    while ($line=fgets($file)) {
+    while ($line=fgets($file,1024)) {
     	if (substr($line,0,strlen($_GET['player'])+1) == $_GET['player']."\t") {
             list($user,,$isadmin,$level,$class,$secs,,$uhost,$online,$idled,
                  $x,$y,

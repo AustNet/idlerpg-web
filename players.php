@@ -1,16 +1,13 @@
-<?include("config.php")?>
-<?include("commonfunctions.php")?>
-<html>
-<head>
-<title><?php print $irpg_chan?> Idle RPG: Player Info</title>
+<?
+    include("config.php");
+    include("commonfunctions.php");
+    $irpg_page_title = "Player Info";
+    include("header.php");
+?>
 
-<?include("header.php")?>
-
-<p>
-  <span class="head1">Pick a player to view:</span>
-  <span class="smaller">[gray=offline]</span>
-</p>
-<blockquote>
+  <h1>Players</h1>
+  <h2>Pick a player to view</h2>
+  <p class="small">[gray=offline]</p>
   <ol>
 <?php
     $file = file($irpg_db);
@@ -19,29 +16,22 @@
     foreach ($file as $line) {
         list($user,,,$level,$class,$secs,,,$online) = explode("\t",trim($line));
 
-        /* why not HTML_entity? tb */
-			
-        $class = str_replace("<","&lt;",$class);
-        $class = str_replace(">","&gt;",$class);
-
-        $user2 = str_replace("<","&lt;",$user);
-        $user2 = str_replace(">","&gt;",$user2);
-
-        $user_encode = htmlentities(urlencode($user));
+        $class = htmlentities($class);
         $next_level = duration($secs);
 
-
-        print "    <li".(!$online?" class=\"offline\"":"")."><a".(!$online?" class=\"offline\"":"")." href=\"playerview.php?player=$user_encode\">$user2</a>, the level $level $class. Next level in $next_level.</li>\n";
+        print "    <li".(!$online?" class=\"offline\"":"")."><a".
+              (!$online?" class=\"offline\"":"").
+              " href=\"playerview.php?player=".urlencode($user).
+              "\">".htmlentities($user).
+              "</a>, the level $level $class. Next level in $next_level.</li>\n";
 
     }
 ?>
   </ol>
-  For a script to view player stats from a terminal, try <a
+  <p>For a script to view player stats from a terminal, try <a
   href="idlerpg-adv.txt">this</a> perl script by
-  <a href="mailto:daxxar@mental.mine.nu">daxxar</a>.<br><br>
+  <a href="mailto:daxxar@mental.mine.nu">daxxar</a>.</p>
 
-  See player stats in <a href="db.php">table format</a>.
-</blockquote>
+  <p>See player stats in <a href="db.php">table format</a>.</p>
 
 <?include("footer.php")?>
-

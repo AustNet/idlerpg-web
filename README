@@ -1,5 +1,5 @@
 ------------------------------------------
-IRPG Website Code README v1.0 (2004-05-27)
+IRPG Website Code README v1.1 (2004-06-27)
 ------------------------------------------
 
 -----------
@@ -13,9 +13,8 @@ License :	Public Domain
  Versions
 -----------
 
-Site:	v0.4 [current/changes courtesy of Caffeen & Chewie], Released May
-        28th, 2004.
-Bot :	v3.0.2 [current], Released May 28th, 2004.
+Site:	v0.5 [current/changes courtesy of res0], Released July 17th, 2004.
+Bot :	v3.1.2 [current], Released June 6th, 2004.
 
 ------------
 Installation
@@ -29,7 +28,7 @@ Installation
    off the option to write quest info to file, you'll have to manually edit
    some scripts to take this into account. If you disable the INFO command,
    you might want to remove it from the index.php page.
-6. Some code in this package requires that your system have GD (or have it
+6. Some code in this package requires that your system have GD 2.0+ (or have it
    enabled in your php.ini, on Win32). If you don't want this functionality to
    be available, edit the script playerview.php to remove the use of the map
    and header.php to remove the links to the world map and the quest info page.
@@ -41,33 +40,3 @@ Installation
    section of the forum, http://idlerpg.net/forum.php, not via e-mail or IRC.
    If you notice a bug, however, you may use any method to contact me.
    Thanks :^)
-
------------
- File List
------------
-
-ChangeLog
-README
-admincomms.txt
-commonfunctions.php
-config.php
-contact.php
-db.php
-down.png
-dump.php
-footer.php
-head.png
-header.php
-hits.db
-idlerpg-adv.txt
-index.php
-makemap.php
-makequestmap.php
-makeworldmap.php
-players.php
-playerview.php
-quest.php
-tablegrad.gif
-up.png
-worldmap.php
-xml.php

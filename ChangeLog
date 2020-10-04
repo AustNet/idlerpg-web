@@ -6,6 +6,25 @@ don't see listed here.
 Also, please note that any use of "incowrect" or other cow-related "typos" are
 NOT typos. I like cattle. A lot. Please stop fixing them :^)
 
+2004-07-17  Jon Honeycutt  <jotun@idlerpg.net>
+    * huge modification of the entire source by the original coder, res0
+      <bk@slashnet.org>. res0 has really helped this project through his many
+      contributions; it wouldn't be where it is today without him. thanks, res0!
+      * New site layout (valid XHTML 1.1 strict) using CSS
+      * Cleaned up PHP
+      * User maps do not display unless visitor clicks 'display' link
+    * changed fgets() calls to add the optional second parameter (for old PHPs)
+    * removed incorrect header() in makequestmap() (mikegrb)
+    * checked to make sure key $_SESSION['time'] was set before attempting to
+      reference it (HarK0nNeN)
+    * db.php's table tag now specifies the number of rows and columns to make
+      drawing faster in browsers that pay attention to it (res0)
+    * header("Location: ") directives now give full URIs
+    * made better use of htmlentities() and urlencode()s as relates to display
+      of usernames and classes
+    * users on quest and world maps are now clickable, leading to their player
+      info page (John Nielsen)
+
 2004-05-31  Jon Honeycutt  <jotun@idlerpg.net>
     * changed players.php to show offline users as gray, this style is in
       header.php, patch from Chewie <chewie@f2o.org>
