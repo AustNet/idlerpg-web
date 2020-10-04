@@ -6,7 +6,9 @@
       I feel I must warn you. Be careful, and please
       <a href="contact.php">report bugs</a> to me.
       <br><br>
-      PHP IRPG Site Source v0.1, Released December 28th, 2003. 97.3k.
+      v0.1.1 [<b>current</b>], Released December 31st, 2003. 97.4k.
+      <a href="site.source.v0.1.1.zip">download</a>.<br>
+      v0.1, Released December 28th, 2003. 97.3k.
       <a href="site.source.zip">download</a>.<br>
     </blockquote>
 <?include("footer.php")?>

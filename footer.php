@@ -12,8 +12,8 @@
             }
             foreach ($hits as $line) {
                 list($page,$numhits,$date) = explode("\t",trim($line));
-                $numhits++;
                 if ($page == $_SERVER['PHP_SELF']) {
+                    ++$numhits;
                     echo "$numhits hits since $date";
                     $found = 1;
                 }
@@ -23,8 +23,11 @@
             }
             if (!$found && $fp) {
                 echo "1 hits since ".date("M j, Y",time());
-                fwrite($fp,"$_SERVER['PHP_SELF']\t1\t".date("M j, Y",time())."\n");
+                fwrite($fp,$_SERVER['PHP_SELF']."\t1\t".date("M j, Y",time())."\n");
             }
+            $fp2 = fopen("combo.log.txt","a");
+            fwrite($fp2,$_SERVER['REMOTE_ADDR']." ; ".$_SERVER['REQUEST_URI']." ; ".$_SERVER['HTTP_REFERER']." ; ".$_SERVER['HTTP_USER_AGENT']."\n");
+            fclose($fp2);
             fclose($fp);
         ?>
       </p>
