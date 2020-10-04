@@ -1,3 +1,7 @@
+This is not the full list of commands for the Idle RPG bot, but only the list
+of admin commands. For more information on the Idle RPG bot, visit
+http://idlerpg.net/
+
 INFO, retrieve some fairly useless stats about the bot.
 
 DIE, kills the bot.
@@ -16,14 +20,11 @@ CHUSER <char name> <new char name>, change a character's username in the IRPG.
      existing account, but is untested.
 
 PUSH <char name> <seconds>, push a player toward his goal by subtracting time
-     from his next time to level. Please use this only if b0t has mistakenly
+     from his next time to level. Please use this only if bot has mistakenly
      penalized someone. You could also use this to punish a user by setting
      the number of seconds to a negative number. Don't do that.
 
 DEL <char name>, remove a user's account.
-
-ALERT <message>, send a non-penalized privmsg to channel. Don't use this to
-     chat!
 
 JUMP <server[:port]>, move the bot to another server.
 
@@ -39,3 +40,26 @@ RELOADDB, force bot to reload player database file, rewriting all memory.
      RELOADDB can only be used while in pause mode.
 
 PAUSE, toggle pause mode.
+
+PEVAL <code>, execute arbitrary argument as Perl code. Queues output > 3 lines
+     or >1k of text. Some useful PEVAL commands:
+       - Delete all accounts not logged in in 4 weeks (See also: DELOLD):
+         /msg bot PEVAL delete $rps{$_} for grep { time()-$rps{$_}{lastlogin} > 3600*24*7*4 && !$rps{$_}{online} } keys %rps;
+       - Remove one hour from everyone's clocks:
+         /msg bot PEVAL $rps{$_}{next} -= 3600 for keys %rps;
+       - List all online users, separated by commas:
+         /msg bot PEVAL join(', ',grep { $rps{$_}{online} } keys %rps);
+       - View contents of a file on remote host:
+         /msg bot peval `cat file`
+       - Turn on debug mode:
+         /msg bot peval $opts{debug}=1;
+       - Force write-out of database:
+         /msg bot peval writedb();
+
+DELOLD <days>, remove all non-logged-in accounts inactive in the last <days>
+     days.
+
+CLEARQ, clear the outgoing message queue. Useful to use if someone floods the
+     bot with a lot of text that it plans to respond to.
+
+MKADMIN <username>, set the isadmin flag for a given username.

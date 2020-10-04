@@ -1,7 +1,7 @@
 <style type="text/css">
 <!--
     body { 
-        font-family: trebuchet ms, Arial, Helvetica, Sans Serif; 
+        font-family: "Trebuchet MS", Arial, Helvetica, sans-serif; 
         background-color: white;
         color: black;
     }
@@ -19,22 +19,23 @@
 <body>
 
 <!-- Idle RPG Logo -->
-<img src="head.png" alt="#g7 Idle RPG" title="#g7 Idle RPG" 
-width="400" height="100">
-
-<p>
 <?php
-
-    $BASEURL = "/g7/"; /* Change This if Needed */
+echo('
+<img src="'. $irpg_logo .'" alt="'. $irpg_chan .' Idle RPG" title="'. $irpg_chan .' Idle RPG" width="329" height="117">
+<p>
+');
 
     $topbarurl = array(
         'Game Info' => $BASEURL . 'index.php',
         'Player Info' => $BASEURL . 'players.php',
         'Contact' => $BASEURL . 'contact.php',
-        'Source' => $BASEURL . 'source.php',
-        'Other IRPGs' => $BASEURL . 'others.php',
-        'Site Source' => $BASEURL . 'sitesource.php',
-        'Moo' => 'http://moo.liquigel.net/'
+        'Source [offsite]' => 'http://idlerpg.net/source.php',
+        'Other IRPGs [o/s]' => 'http://idlerpg.net/others.php',
+        'Site Source [o/s]' => 'http://idlerpg.net/sitesource.php',
+        'World Map' => $BASEURL . 'worldmap.php',
+        'Quest Info' => $BASEURL . 'quest.php',
+        'Forum [o/s]' => 'http://idlerpg.net/forum.php',
+        'moo. [o/s]' => 'http://cowcult.org',
     );
 
     $c = 1;
