@@ -152,23 +152,23 @@
         fclose($file);
         if (!is_null($temp) && count($temp)) {
             echo('<h2>');
-            echo $_GET['allmods']!=1?"Recent ":"";
-            echo('Character Modifiers</h2><p>');
-            if ($_GET['allmods'] == 1 || count($temp) < 6) {
+?>
+
+</div>
+  </div>
+</div>
+
+<div class="w3-row-padding w3-padding-64 w3-container">
+  <div class="w3-content">
+    <div class="w3-twothird">
+    <h1>CHARACTER MODIFIERS</h1>
+
+<?php
                 foreach ($temp as $line) {
                     $line=htmlentities(trim($line));
                     echo "      $line<br />\n";
                 }
                 echo "      <br />\n";
-            }
-            else {
-                end($temp);
-                for ($i=0;$i<4;++$i) prev($temp);
-                for ($line=trim(current($temp));$line;$line=trim(next($temp))) {
-                    $line=htmlentities(trim($line));
-                    echo "      $line<br />\n";
-                }
-            }
         }
         if ((!isset($_GET['allmods']) || ($_GET['allmods'] != 1)) && count($temp) > 5) {
 ?>
