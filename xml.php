@@ -3,7 +3,7 @@
     header("Content-Type: text/xml");
     header("Pragma: no-cache"); 
 
-    include("config.php");
+    include("include/config.php");
 
     $_GET['player'] = substr($_GET['player'],0,30);
 
@@ -12,7 +12,7 @@
         ($_SERVER['SERVER_PORT']!=80?':'.$_SERVER['SERVER_PORT']:'').$BASEURL.
         'players.php');
 
-    $file = fopen($irpg_db,"r");
+    $file = fopen($_CONFIG['file_db'],"r");
     fgets($file,1024); // skip top comment
 
     while ($line=fgets($file,1024)) {

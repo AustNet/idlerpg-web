@@ -1,6 +1,6 @@
 <?php
-    include("config.php");
-    $file = fopen($irpg_db,"r");
+    include("include/config.php");
+    $file = fopen($_CONFIG['file_db'],"r");
     fgets($file);
 
     /* don't think we need this anymore..

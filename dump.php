@@ -4,9 +4,9 @@
     // should use the new xml.php to glean player info, which is much more
     // suited to db changes.
     header('Content-Type: text/plain');
-    include("commonfunctions.php");
-    include("config.php");
-    $file = file($irpg_db);
+    include("include/config.php");
+    include("include/idlerpg.php");
+    $file = file($_CONFIG['file_db']);
     $header = explode("\t",$file[0]);
     unset($header[1]); // password
     unset($header[2]); // isadmin
@@ -17,7 +17,7 @@
     echo join("\t",$header)."\n";
     unset($file[0]);
     /* specific character requested */
-    if ($_GET['player']) {
+    if (isset($_GET['player'])) {
         foreach ($file as $line) {
             list($user) = explode("\t",trim($line));
             if ($user == $_GET['player']) {

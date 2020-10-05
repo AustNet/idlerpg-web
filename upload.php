@@ -7,7 +7,7 @@
      * - wget --post-file=original.file.name "http://nic-web01/idlerpg-web/upload.php?api=75d59b8e08bcf53a937afec48c1b80d6&file=db" -O output.log
      */
 
-    include("config.php");
+    include("include/config.php");
 
     $DATA = file_get_contents("php://input");
 
@@ -15,7 +15,7 @@
         die('ERROR No file uploaded.' . PHP_EOL);
     } elseif (!isset($_GET['api']) || !isset($_GET['file'])) {
         die('ERROR No api/file data included in package.' . PHP_EOL);
-    } elseif ($_GET['api'] != $irpg_api) {
+    } elseif ($_GET['api'] != $_CONFIG['api_key']) {
         die('ERROR Invalid api key.' . PHP_EOL);
     } elseif (strpos('db mod qfile', $_GET['file']) === false) {
         die('ERROR Invalid file type.' . PHP_EOL);

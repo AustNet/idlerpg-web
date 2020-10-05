@@ -1,5 +1,5 @@
 <?php
-    include("config.php");
+    include("include/config.php");
     /* we dont need this anymore
     session_start(); // sessions to generate only one map / person / 20s
     if (isset($_SESSION['time']) && time()-$_SESSION['time'] < 20) {
@@ -14,7 +14,7 @@
 
     $stringx=$stringy=-1;
 
-    $file = file($irpg_db);
+    $file = file($_CONFIG['file_db']);
     unset($file[0]);
 
     foreach ($file as $line) {

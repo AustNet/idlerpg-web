@@ -1,16 +1,11 @@
 <?php
 
-    include("config.php");
+    include("include/config.php");
+    include("include/idlerpg.php");
     
-    $irpg_page_title = "DB-style Player Listing";
-    
-    include("header.php");
-    
-    include("commonfunctions.php");
-
-    $file = file($irpg_db);
+    $file = file($_CONFIG['file_db']);
     unset($file[0]);
-    if (!$_GET['sort'] ||
+    if (!isset($_GET['sort']) ||
         (($_GET['sort'] != "cmp_level_asc") &&
         ($_GET['sort'] != "cmp_level_desc") &&
         ($_GET['sort'] != "cmp_isadmin_asc") &&
@@ -251,7 +246,5 @@
     echo('
     </table>
     <br><br>
-    * Accounts created before Aug 29, 2003 may have incowrect data fields.
     ');
-    include("footer.php");
 ?>
