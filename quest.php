@@ -1,10 +1,12 @@
 <?php
-    include("config.php");
-    $irpg_page_title = "Quest Info";
     include("header.php");
-    echo "        <h1>Current Quest</h1>\n";
-    include("commonfunctions.php");
-    $file = fopen($irpg_qfile,"r");
+?>
+<div class="w3-row-padding w3-padding-64 w3-container">
+  <div class="w3-content">
+    <div class="w3-twothird">
+      <h1>Current Quest</h1>
+<?php
+    $file = fopen($_CONFIG['file_quest'],"r");
     $type=0;
     while ($line=fgets($file,1024)) {
         $arg = explode(" ",trim($line));
@@ -114,5 +116,10 @@
         else echo    "<br />\n";
     }
     echo "        <br />\n";
+    ?>
+    </div>
+</div>
+</div>
+<?php
     include("footer.php");
 ?>

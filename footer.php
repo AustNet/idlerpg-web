@@ -1,37 +1,7 @@
-    </div>
-    <div class="footer">
-        <p class="small">
-            Questions? Comments? Suggestions? Bugs? Naked pics?
-            <a href="contact.php"><?php print $admin_email?></a> or <?php print $admin_nick?>@IRC.
-<?php
-/* disabled - old and unused code these days
-            $hits = file("hits.db");
-            $fp = fopen("hits.db", "w");
-            $thispage = explode("/",$_SERVER['PHP_SELF']);
-            $thispage = array_pop($thispage);
-            if ($fp == false) {
-                echo "Error: could not open file hits.db.";
-            }
-            foreach ($hits as $line) {
-                list($page,$numhits,$date) = explode("\t",trim($line));
-                if ($page == $thispage) {
-                    ++$numhits;
-                    echo "            $numhits hits since $date";
-                    $found = 1;
-                }
-                if ($fp) {
-                    fwrite($fp,"$page\t$numhits\t$date\n");
-                }
-            }
-            if (!$found && $fp) {
-                echo "            1 hit since ".date("M j, Y",time());
-                fwrite($fp,$thispage."\t1\t".date("M j, Y",time())."\n");
-            }
-            fclose($fp);
-*/
-?>
+<!-- Footer -->
+<footer class="w3-container w3-padding-20 w3-center w3-opacity">  
+  <p>Updated by <a href="mailto:damian@austnet.org">damian</a> for <a href="https://www.austnet.org/">AustNet</a>. Powered by <a href="https://www.w3schools.com/w3css/default.asp" target="_blank">w3.css</a></p>
+</footer>
 
-        </p>
-    </div>
-  </body>
+</body>
 </html>

@@ -1,37 +1,38 @@
 <?php
-    include("config.php");
-    include("commonfunctions.php");
-    $irpg_page_title = "Player Info";
     include("header.php");
 ?>
 
-  <h1>Players</h1>
-  <h2>Pick a player to view</h2>
-  <p class="small">[gray=offline]</p>
-  <ol>
+<div class="w3-row-padding w3-padding-64 w3-container">
+  <div class="w3-content">
+    <div class="w3-twothird">
+      <h1>PLAYERS</h1>
+      <p>Pick a player to view more information about them. [gray=offline]</p>
+      
+      <ol>
 <?php
-    $file = file($irpg_db);
-    unset($file[0]);
-    usort($file, 'cmp_level_desc');
-    foreach ($file as $line) {
-        list($user,,,$level,$class,$secs,,,$online) = explode("\t",trim($line));
+    if (!file_exists($_CONFIG['file_db'])) {
+      echo '<p>Database file not found, please check website configuration.</p>';
+    }
+    $FILE = file($_CONFIG['file_db']);
+    unset($FILE[0]);
+    usort($FILE, 'cmp_level_desc');
+    foreach ($FILE as $LINE) {
+        list($USER,,,$LEVEL,$CLASS,$SECS,,,$ONLINE) = explode("\t",trim($LINE));
 
-        $class = htmlentities($class);
-        $next_level = duration($secs);
+        $CLASS = htmlentities($CLASS);
+        $NEXT_LEVEL = duration($SECS);
 
-        print "    <li".(!$online?" class=\"offline\"":"")."><a".
-              (!$online?" class=\"offline\"":"").
-              " href=\"playerview.php?player=".urlencode($user).
-              "\">".htmlentities($user).
-              "</a>, the level $level $class. Next level in $next_level.</li>\n";
-
+?>
+        <li <?php echo (!$ONLINE ? 'class="w3-text-grey"' : ''); ?>><a href="playerview.php?player=<?php echo urlencode($USER); ?>"><?php echo htmlentities($USER); ?></a>, the level <?php echo $LEVEL; ?> <?php echo $CLASS; ?>. Next level in <?php echo $NEXT_LEVEL; ?>.</li>
+<?php
     }
 ?>
-  </ol>
-  <p>For a script to view player stats from a terminal, try <a
-  href="idlerpg-adv.txt">this</a> perl script by
-  <a href="mailto:daxxar@mental.mine.nu">daxxar</a>.</p>
+      </ol>
+      <p>For a script to view player stats from a terminal, try <a href="scripts/idlerpg-adv.pl">this</a> perl script by <a href="mailto:daxxar@mental.mine.nu">daxxar</a>.</p>
 
-  <p>See player stats in <a href="db.php">table format</a>.</p>
+      <p>See player stats in <a href="db.php">table format</a>.</p>
+    </div>
+  </div>
+</div>
 
 <?php include("footer.php"); ?>

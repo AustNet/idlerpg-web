@@ -1,21 +1,22 @@
 <?php
-    include("config.php");
-
-    $_GET['player'] = substr($_GET['player'],0,30);
-
-    /* Determine if a Player was entered. If not, redirect. */
-    if ($_GET['player']=="") header('Location: http://'.$_SERVER['SERVER_NAME'].
-        ($_SERVER['SERVER_PORT']!=80?':'.$_SERVER['SERVER_PORT']:'').$BASEURL.
-        'players.php');
-    
-    $irpg_page_title = "Player Info: " . htmlentities($_GET['player']);
-    $showmap = (isset($_GET['showmap']) ? 1 : 0);
-    
     include("header.php");
-    include("commonfunctions.php");
-    echo "<h1>Player Info</h1>";
-    $file = fopen($irpg_db,"r");
-    fgets($file,1024); // skip top comment
+?>
+<div class="w3-row-padding w3-padding-64 w3-container">
+  <div class="w3-content">
+    <div class="w3-twothird">
+<?php
+
+    if (!isset($_GET['player'])) {
+        // if no player is entered go to the players list
+        header('Location: players.php');
+    } else {
+        // we can always show the map, no bandwidth/cpu restrictions these days
+        //$showmap = (isset($_GET['showmap']) ? 1 : 0);
+        $showmap = 1;
+    
+        echo "<h1>PLAYER INFO</h1>";
+        $file = fopen($_CONFIG['file_db'],"r");
+        fgets($file,1024); // skip top comment
     $found=0;
     while ($line=fgets($file,1024)) {
         if (substr($line,0,strlen($_GET['player'])+1) == $_GET['player']."\t") {
@@ -46,7 +47,7 @@
             break;
         }
     }
-    if (!$found) echo "<h1>Error</h1><p><b>No such user.</b></p>\n";
+    if (!$found) echo "<h1>ERROR</h1><p><b>No such user.</b></p>\n";
     else {
         $class=htmlentities($class);
         /* if we htmlentities($user), then we cannot use links with it. */
@@ -62,10 +63,27 @@
              "      <b>Total time idled:</b> ".duration($idled)."<br />\n".
              "      <b>Current position:</b> [$x,$y]<br />\n".
              "      <b>Alignment:</b> ".($alignment=='e'?"Evil":($alignment=='n'?"Neutral":"Good"))."<br />\n".
-             "      <b>XML:</b> [<a href=\"xml.php?player=".urlencode($user)."\">link</a>]</p>\n".
-             "    <h2>Map</h2>\n".
-             "    ".($showmap?"<div id=\"map\"><img src=\"makemap.php?player=".urlencode($user)."\"></div>\n\n":"<p><a href=\"?player=".urlencode($user)."&showmap=1\">Show map</a></p>\n\n")."".
-             "    <h2>Items</h2>\n<p>";
+             "      <b>XML:</b> [<a href=\"xml.php?player=".urlencode($user)."\">link</a>]</p>\n";
+?>
+
+    </div>
+  </div>
+</div>
+
+<div class="w3-row-padding w3-light-grey w3-padding-64 w3-container">
+  <div class="w3-content">
+    <div class="w3-twothird">
+      <h1>MAP</h1>
+      <div id="map"><img src="makemap.php?player=<?php echo urlencode($user); ?>"></div>
+      </div>
+  </div>
+</div>
+
+<div class="w3-row-padding w3-padding-64 w3-container">
+  <div class="w3-content">
+    <div class="w3-twothird">
+    <h1>ITEMS</h1>
+<?php
         ksort($item);
         $sum = 0;
         foreach ($item as $key => $val) {
@@ -98,9 +116,18 @@
             $sum += $val;
         }
         echo "      <br />\n      sum: $sum<br />\n".
-             "    </p>".
-             "    <h2>Penalties</h2>\n".
-             "    <p>\n";
+             "    </p>";
+?>
+
+</div>
+  </div>
+</div>
+
+<div class="w3-row-padding w3-light-grey w3-padding-64 w3-container">
+  <div class="w3-content">
+    <div class="w3-twothird">
+      <h1>PENALTIES</h1>
+<?php
 
         ksort($pen);
         $sum = 0;
@@ -110,7 +137,7 @@
         }
         echo "      <br />\n      total: ".duration($sum)."</p>\n";
 
-        $file = fopen($irpg_mod,"r");
+        $file = fopen($_CONFIG['file_mod'],"r");
         $temp = array();
         while ($line=fgets($file,1024)) {
             if (strstr($line," ".$_GET['player']." ")          ||
@@ -143,7 +170,7 @@
                 }
             }
         }
-        if ($_GET['allmods'] != 1 && count($temp) > 5) {
+        if ((!isset($_GET['allmods']) || ($_GET['allmods'] != 1)) && count($temp) > 5) {
 ?>
       <br />
       [<a href="<?php echo $_SERVER['PHP_SELF']."?player=".urlencode($user);?>&amp;allmods=1">View all Character Modifiers</a> (<?php echo count($temp); ?>)]
@@ -151,6 +178,12 @@
 <?php
         }
     }
+}
+?>
+    </div>
+  </div>
+</div>
+<?php
     include("footer.php");
 ?>
 

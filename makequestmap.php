@@ -1,6 +1,6 @@
 <?
-    include("config.php");
-    $file = fopen($irpg_db,"r");
+    include("include/config.php");
+    $file = fopen($_CONFIG['file_db'],"r");
     fgets($file,1024);
 
     session_start(); // sessions to generate only one map / person / 20s
