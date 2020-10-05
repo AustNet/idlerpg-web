@@ -20,7 +20,7 @@
     } elseif (strpos('db mod qfile', $_GET['file']) === false) {
         die('ERROR Invalid file type.' . PHP_EOL);
     } else {
-        $FILE = ($_GET['file'] == 'db' ? $irpg_db : ($_GET['file'] == 'mod' ? $irpg_mod : ($_GET['file'] == 'qfile' ? $irpg_qfile : '/dev/null')));
+        $FILE = ($_GET['file'] == 'db' ? $_CONFIG['file_db'] : ($_GET['file'] == 'mod' ? $_CONFIG['file_mod'] : ($_GET['file'] == 'qfile' ? $_CONFIG['file_quest'] : '/dev/null')));
 
         file_put_contents($FILE, $DATA);
 
