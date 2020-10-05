@@ -23,6 +23,8 @@
         $FILE = ($_GET['file'] == 'db' ? $irpg_db : ($_GET['file'] == 'mod' ? $irpg_mod : ($_GET['file'] == 'qfile' ? $irpg_qfile : '/dev/null')));
 
         file_put_contents($FILE, $DATA);
+
+        die('SUCCESS');
     }
 
     
