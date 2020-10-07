@@ -1,4 +1,8 @@
 <?php
+// connect to the database
+
+$_CONFIG['db'] = new PDO('mysql:host='. $_CONFIG['db_host'] .';dbname='. $_CONFIG['db_name'], $_CONFIG['db_user'], $_CONFIG['db_pass']);
+
     function duration($s) {
         $s = abs(intval($s));
         if ($s == 0) return "None";
@@ -90,5 +94,47 @@
         foreach ($i1 as $item) { $s1 += $item; }
         foreach ($i2 as $item) $s2 += $item;
         return ($s1 > $s2) ? -1 : 1;
+    }
+
+    function tsv_to_array($DATA) {
+        // set up our output array
+        $INFO = array();
+
+        // split the data into lines and loop through
+        foreach (explode("\n", $DATA) as $LINE) {
+            // split the line into items
+            $ITEMS = explode("\t", $LINE);
+
+            // skip if we have an empty line
+            if (count($ITEMS) == 1) {
+                continue;
+            }
+
+            // set up the headers if we found a # header
+            if (substr($ITEMS[0], 0, 1) == '#') {
+                // remove the hash and trim it up
+                $ITEMS[0] = trim(substr($ITEMS[0], 1));
+
+                // set up our header
+                $HEAD = $ITEMS;
+
+                // loop so we don't process
+                continue;
+            }
+
+
+            // set up a temp array
+            $TMP = Array();
+
+            // loop through all fields and put the header in
+            foreach ($ITEMS as $INT => $ITEM) {
+                $TMP[str_replace(' ', '_', $HEAD[$INT])] = $ITEM;
+            }
+
+            // add the line to the array
+            $INFO[] = $TMP;
+        }
+
+        return $INFO;
     }
 ?>
