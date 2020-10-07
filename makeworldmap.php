@@ -1,5 +1,6 @@
 <?php
     include("include/config.php");
+    include('include/idlerpg.php');
     $file = fopen($_CONFIG['file_db'],"r");
     fgets($file);
 

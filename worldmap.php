@@ -10,7 +10,7 @@
 
 <center>
 <div id="map" class="w3-center">
-    <img src="makeworldmap.php" alt="IdleRPG World Map" title="IdleRPG World Map" usemap="#world" border="0" />
+    <img src="makeworldmap.php?<?php echo md5(time()); ?>" alt="IdleRPG World Map" title="IdleRPG World Map" usemap="#world" border="0" />
     <map id="world" name="world">
 <?php
     $file = fopen($_CONFIG['file_db'],"r");
