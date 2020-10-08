@@ -4,24 +4,22 @@
     $file = fopen($_CONFIG['file_db'],"r");
     fgets($file);
 
-    /* don't think we need this anymore..
-    session_start(); // sessions to generate only one map / person / 20s
-    if (isset($_SESSION['time']) && time()-$_SESSION['time'] < 20) {
-        header("Location: images/maperror.png");
-        exit(0);
-    }
-    $_SESSION['time']=time();
-    */
-
-    $map = imageCreate(500,500);
+    //$map = imageCreate(1536, 1152);
+    $map = imagecreatefromjpeg('images/map.jpg');
     $magenta = ImageColorAllocate($map, 255, 0, 255);
     $blue = imageColorAllocate($map, 0, 128, 255);
+    $black = imageColorAllocate($map, 0, 0, 0);
     $red = imageColorAllocate($map, 211, 0, 0);
     ImageColorTransparent($map, $magenta);
     while ($line=fgets($file)) {
-        list(,,,,,,,,$online,,$x,$y) = explode("\t",trim($line));
-        if ($online == 1) imageFilledEllipse($map, $x, $y, 3, 3, $blue);
-        else imageFilledEllipse($map, $x, $y, 3, 3, $red);
+        list($user,,,,,,,,$online,,$x,$y) = explode("\t",trim($line));
+        if ($online == 1) {
+            imageFilledEllipse($map, floor($x * 2.4), floor($y * 1.2), 9, 9, $black);
+            imageFilledEllipse($map, floor($x * 2.4), floor($y * 1.2), 6, 6, $blue);
+        } else {
+            imageFilledEllipse($map, floor($x * 2.4), floor($y * 1.2), 9, 9, $black);
+            imageFilledEllipse($map, floor($x * 2.4), floor($y * 1.2), 6, 6, $red);
+        }
     }
     header("Content-type: image/png");
     imagePNG($map);
