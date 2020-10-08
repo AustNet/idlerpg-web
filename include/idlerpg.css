@@ -12,8 +12,4 @@ table.irpg-table {
     text-align: right;
     padding-right: 10px;
  }
- #map {
-    width: 500px;
-    height: 500px;
-    background-image: url(../images/newmap.png);
-}
+
