@@ -8,7 +8,7 @@
     }
     $_SESSION['time']=time();
     */
-    $map = imageCreate(500,500);
+    $map = imagecreatefromjpeg('images/map.jpg');
 
     $user = substr($_GET['player'],0,30);
 
@@ -43,18 +43,18 @@
         $parchment = imagecolorallocate($map, 255, 255, 204);
     
         // Avoid drawing a brown dot on a brown area
-        $rgb = imageColorAt($map, $x, $y);
+        $rgb = imageColorAt($map, floor($x * 2.4), floor($y * 1.2));
         if ($rgb > 0) { // $rgb is 0 on our parchment-colored areas
             $temp = $brown;
             $brown = $parchment;
             $parchment = $temp;
         }
         // YOU ARE HERE
-        imageFilledEllipse($map, $x, $y, 6, 6, $brown);
+        imageFilledEllipse($map, floor($x * 2.4), floor($y * 1.2), 6, 6, $brown);
         // background for text
-        imageFilledRectangle($map,$stringx+6,$stringy-($height/2),$stringx+6+$width*(strlen($user)+1),$stringy+($height/2),$brown);
+        imageFilledRectangle($map,floor($stringx * 2.4)+9,floor($stringy * 1.2)-($height/2),floor($stringx * 2.4)+9+$width*(strlen($user)+1),floor($stringy * 1.2)+($height/2),$brown);
         // text itself
-        imageString($map,5,$stringx+7+($width/2),$stringy-($height/2)-1,$user,$parchment);
+        imageString($map,5,floor($stringx * 2.4)+10+($width/2),floor($stringy * 1.2)-($height/2)-1,$user,$parchment);
     }
     header("Content-type: image/png");
     imagePNG($map);
