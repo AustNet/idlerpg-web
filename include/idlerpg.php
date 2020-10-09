@@ -137,4 +137,26 @@ $_CONFIG['db'] = new PDO('mysql:host='. $_CONFIG['db_host'] .';dbname='. $_CONFI
 
         return $INFO;
     }
+
+    function itemfeature($LEVEL) {
+        if (substr($LEVEL, -1, 1) == 'a') {
+            return "Mattt's Omniscience Grand Crown";
+        } elseif (substr($LEVEL, -1, 1) == 'b') {
+            return "Res0's Protectorate Plate Mail";
+        } elseif (substr($LEVEL, -1, 1) == 'c') {
+            return "Dwyn's Storm Magic Amulet";
+        } elseif (substr($LEVEL, -1, 1) == 'd') {
+            return "Jotun's Fury Colossal Sword";
+        } elseif (substr($LEVEL, -1, 1) == 'e') {
+            return "Drdink's Cane of Blind Rage";
+        } elseif (substr($LEVEL, -1, 1) == 'f') {
+            return "Mrquick's Magical Boots of Swiftness";
+        } elseif (substr($LEVEL, -1, 1) == 'g') {
+            return "Jeff's Cluehammer of Doom";
+        } elseif (substr($LEVEL, -1, 1) == 'h') {
+            return "Juliet's Glorious Ring of Sparkliness";
+        } else {
+            return null;
+        }
+    }
 ?>
