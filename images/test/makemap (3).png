@@ -1,8 +1,0 @@
-<br />
-<b>Notice</b>:  Undefined variable: map2 in <b>/var/www/idlerpg-web/makemap.php</b> on line <b>93</b><br />
-<br />
-<b>Warning</b>:  imagepng() expects parameter 1 to be resource, null given in <b>/var/www/idlerpg-web/makemap.php</b> on line <b>93</b><br />
-<br />
-<b>Notice</b>:  Undefined variable: map2 in <b>/var/www/idlerpg-web/makemap.php</b> on line <b>97</b><br />
-<br />
-<b>Warning</b>:  imagedestroy() expects parameter 1 to be resource, null given in <b>/var/www/idlerpg-web/makemap.php</b> on line <b>97</b><br />
