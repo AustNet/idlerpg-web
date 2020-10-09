@@ -3,77 +3,106 @@
 ?>
 <div class="w3-row-padding w3-padding-64 w3-container">
   <div class="w3-content">
-    <div class="w3-twothird">
 <?php
 
     if (!isset($_GET['player'])) {
         // if no player is entered go to the players list
         header('Location: players.php');
     } else {
-        // we can always show the map, no bandwidth/cpu restrictions these days
-        //$showmap = (isset($_GET['showmap']) ? 1 : 0);
-        $showmap = 1;
-    
-        echo "<h1>PLAYER INFO</h1>";
+?>
+    <h1>PLAYER INFO</h1>
+<?php
         $file = fopen($_CONFIG['file_db'],"r");
         fgets($file,1024); // skip top comment
-    $found=0;
-    while ($line=fgets($file,1024)) {
-        if (substr($line,0,strlen($_GET['player'])+1) == $_GET['player']."\t") {
-            list($user,,$isadmin,$level,$class,$secs,,$uhost,$online,$idled,
-                 $x,$y,
-                 $pen['mesg'],
-                 $pen['nick'],
-                 $pen['part'],
-                 $pen['kick'],
-                 $pen['quit'],
-                 $pen['quest'],
-                 $pen['logout'],
-                 $created,
-                 $lastlogin,
-                 $item['amulet'],
-                 $item['charm'],
-                 $item['helm'],
-                 $item['boots'],
-                 $item['gloves'],
-                 $item['ring'],
-                 $item['leggings'],
-                 $item['shield'],
-                 $item['tunic'],
-                 $item['weapon'],
-                 $alignment,
-            ) = explode("\t",trim($line));
-            $found=1;
-            break;
+        $found=0;
+        while ($line=fgets($file,1024)) {
+            if (substr($line,0,strlen($_GET['player'])+1) == $_GET['player']."\t") {
+                list($user,,
+                    $isadmin,
+                    $level,
+                    $class,
+                    $secs,,
+                    $uhost,
+                    $online,
+                    $idled,
+                    $x,$y,
+                    $pen['mesg'],
+                    $pen['nick'],
+                    $pen['part'],
+                    $pen['kick'],
+                    $pen['quit'],
+                    $pen['quest'],
+                    $pen['logout'],
+                    $created,
+                    $lastlogin,
+                    $item['amulet'],
+                    $item['charm'],
+                    $item['helm'],
+                    $item['boots'],
+                    $item['gloves'],
+                    $item['ring'],
+                    $item['leggings'],
+                    $item['shield'],
+                    $item['tunic'],
+                    $item['weapon'],
+                    $alignment,
+                ) = explode("\t",trim($line));
+                $found=1;
+                break;
+            }
         }
-    }
-    if (!$found) echo "<h1>ERROR</h1><p><b>No such user.</b></p>\n";
-    else {
-        $class=htmlentities($class);
-        /* if we htmlentities($user), then we cannot use links with it. */
-        echo "      <p><b>User:</b> ".htmlentities($user)."<br />\n".
-             "      <b>Class:</b> $class<br />\n".
-             "      <b>Admin?:</b> ".($isadmin?"Yes":"No")."<br />\n".
-             "      <b>Level:</b> $level<br />\n".
-             "      <b>Next level:</b> ".duration($secs)."<br />\n".
-             "      <b>Status:</b> O".($online?"n":"ff")."line<br />\n".
-             "      <b>Host:</b> ".($uhost?$uhost:"Unknown")."<br />\n".
-             "      <b>Account Created:</b> ".date("D M j H:i:s Y",$created)."<br />\n".
-             "      <b>Last login:</b> ".date("D M j H:i:s Y",$lastlogin)."<br />\n".
-             "      <b>Total time idled:</b> ".duration($idled)."<br />\n".
-             "      <b>Current position:</b> [$x,$y]<br />\n".
-             "      <b>Alignment:</b> ".($alignment=='e'?"Evil":($alignment=='n'?"Neutral":"Good"))."<br />\n".
-             "      <b>XML:</b> [<a href=\"xml.php?player=".urlencode($user)."\">link</a>]</p>\n";
+        if (!$found) echo "<h1>ERROR</h1><p><b>No such user.</b></p>\n";
+        else {
+            $class=htmlentities($class);
 ?>
+    <table class="irpg-table" style="width: 100%;">
+        <tbody>
+        <tr>
+                <td style="width: 50px; font-weight: bold; text-align: right; padding-right: 10px;"><strong>User:</strong></td>
+                <td style="width: ;"><?php echo htmlentities($user); ?></td>
+                <td style="width: 150px; font-weight: bold; text-align: right; padding-right: 10px;"><strong>Admin:</strong></td>
+                <td style="width: ;"><?php echo ($isadmin ? 'Yes' : 'No'); ?></td>
+            </tr>
+            <tr>
+                <td style="font-weight: bold; text-align: right; padding-right: 10px;"><strong>Level:</strong></td>
+                <td><?php echo $level; ?></td>
+                <td style="font-weight: bold; text-align: right; padding-right: 10px;"><strong>Next Level:</strong></td>
+                <td><?php echo duration($secs); ?></td>
+            </tr>
+            <tr>
+                <td style="font-weight: bold; text-align: right; padding-right: 10px;"><strong>Status:</strong></td>
+                <td><?php echo ($online ? 'Online' : 'Offline'); ?></td>
+                <td style="font-weight: bold; text-align: right; padding-right: 10px;"><strong>Host:</strong></td>
+                <td><?php echo $uhost; ?></td>
+            </tr>
+            <tr>
+                <td style="font-weight: bold; text-align: right; padding-right: 10px;"><strong>Created:</strong></td>
+                <td><?php echo date('D M j H:i:s Y', $created); ?></td>
+                <td style="font-weight: bold; text-align: right; padding-right: 10px;"><strong>Last Login:</strong></td>
+                <td><?php echo date('D M j H:i:s Y', $lastlogin); ?></td>
+            </tr>
+            <tr>
+                <td style="font-weight: bold; text-align: right; padding-right: 10px;"><strong>Idled:</strong></td>
+                <td><?php echo duration($idled); ?></td>
+                <td style="font-weight: bold; text-align: right; padding-right: 10px;"><strong>Position:</strong></td>
+                <td><?php echo $x .' x '. $y; ?></td>
+            </tr>
+            <tr>
+                <td style="font-weight: bold; text-align: right; padding-right: 10px;"><strong>Alignment:</strong></td>
+                <td><?php echo ($alignment == 'e' ? 'Evil' : ($alignment == 'n' ? 'Neutral' : 'Good')); ?></td>
+                <td style="font-weight: bold; text-align: right; padding-right: 10px;"><strong>XML:</strong></td>
+                <td><a href="xml.php?player=<?php echo urlencode($user); ?>"><?php echo $user; ?></a></td>
+            </tr>
+        </tbody>
+    </table>
 
-    </div>
   </div>
 </div>
 
 <div class="w3-row-padding w3-light-grey w3-padding-64 w3-container w3-center">
     <div style="margin: auto;">
         <h1>MAP</h1>
-        <div id="map"><img src="makemap.php?player=<?php echo urlencode($user); ?>"></div>
+        <div id="map"><img src="makemap.php?<?php echo md5(time()); ?>&player=<?php echo urlencode($user); ?>"></div>
     </div>
 </div>
 
