@@ -1,0 +1,22 @@
+<br />
+<b>Warning</b>:  imagecreatefromjpeg(images/map.large.jpg): failed to open stream: No such file or directory in <b>/var/www/idlerpg-web/images/test.php</b> on line <b>3</b><br />
+<br />
+<b>Warning</b>:  imagecolorallocate() expects parameter 1 to be resource, boolean given in <b>/var/www/idlerpg-web/images/test.php</b> on line <b>32</b><br />
+<br />
+<b>Warning</b>:  imagecolortransparent() expects parameter 1 to be resource, boolean given in <b>/var/www/idlerpg-web/images/test.php</b> on line <b>33</b><br />
+<br />
+<b>Warning</b>:  imagecolorallocate() expects parameter 1 to be resource, boolean given in <b>/var/www/idlerpg-web/images/test.php</b> on line <b>34</b><br />
+<br />
+<b>Warning</b>:  imagecolorallocate() expects parameter 1 to be resource, boolean given in <b>/var/www/idlerpg-web/images/test.php</b> on line <b>35</b><br />
+<br />
+<b>Warning</b>:  imagecolorat() expects parameter 1 to be resource, boolean given in <b>/var/www/idlerpg-web/images/test.php</b> on line <b>38</b><br />
+<br />
+<b>Warning</b>:  imagefilledellipse() expects parameter 1 to be resource, boolean given in <b>/var/www/idlerpg-web/images/test.php</b> on line <b>45</b><br />
+<br />
+<b>Warning</b>:  imagefilledrectangle() expects parameter 1 to be resource, boolean given in <b>/var/www/idlerpg-web/images/test.php</b> on line <b>47</b><br />
+<br />
+<b>Warning</b>:  imagestring() expects parameter 1 to be resource, boolean given in <b>/var/www/idlerpg-web/images/test.php</b> on line <b>49</b><br />
+<br />
+<b>Warning</b>:  imagepng() expects parameter 1 to be resource, boolean given in <b>/var/www/idlerpg-web/images/test.php</b> on line <b>52</b><br />
+<br />
+<b>Warning</b>:  imagedestroy() expects parameter 1 to be resource, boolean given in <b>/var/www/idlerpg-web/images/test.php</b> on line <b>53</b><br />

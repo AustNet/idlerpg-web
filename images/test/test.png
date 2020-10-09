@@ -1,0 +1,20 @@
+<br />
+<b>Warning</b>:  include(include/config.php): failed to open stream: No such file or directory in <b>/var/www/idlerpg-web/images/test.php</b> on line <b>2</b><br />
+<br />
+<b>Warning</b>:  include(): Failed opening 'include/config.php' for inclusion (include_path='.:/usr/share/php') in <b>/var/www/idlerpg-web/images/test.php</b> on line <b>2</b><br />
+<br />
+<b>Warning</b>:  imagecreatefromjpeg(images/map.large.jpg): failed to open stream: No such file or directory in <b>/var/www/idlerpg-web/images/test.php</b> on line <b>3</b><br />
+<br />
+<b>Notice</b>:  Undefined variable: _CONFIG in <b>/var/www/idlerpg-web/images/test.php</b> on line <b>9</b><br />
+<br />
+<b>Warning</b>:  file(): Filename cannot be empty in <b>/var/www/idlerpg-web/images/test.php</b> on line <b>9</b><br />
+<br />
+<b>Warning</b>:  Invalid argument supplied for foreach() in <b>/var/www/idlerpg-web/images/test.php</b> on line <b>12</b><br />
+<br />
+<b>Warning</b>:  imagecolorallocate() expects parameter 1 to be resource, boolean given in <b>/var/www/idlerpg-web/images/test.php</b> on line <b>21</b><br />
+<br />
+<b>Warning</b>:  imagestring() expects parameter 1 to be resource, boolean given in <b>/var/www/idlerpg-web/images/test.php</b> on line <b>21</b><br />
+<br />
+<b>Warning</b>:  imagepng() expects parameter 1 to be resource, boolean given in <b>/var/www/idlerpg-web/images/test.php</b> on line <b>52</b><br />
+<br />
+<b>Warning</b>:  imagedestroy() expects parameter 1 to be resource, boolean given in <b>/var/www/idlerpg-web/images/test.php</b> on line <b>53</b><br />
