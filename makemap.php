@@ -32,12 +32,12 @@ function write($map, $txt) {
     // loop through all users
     foreach ($file as $line) {
         // push user information into a readible format
-        list($username,,,,,,,,$online,,$x,$y) = explode("\t",trim($line));
+        list($username,,,,,,,,$online,,$x,$y,,,,,,,,,$lastlogin) = explode("\t",trim($line));
         //echo $username . PHP_EOL;
 
         // print the user location dot
         imageFilledEllipse($map, floor($x * ($MAP['width'] / 500)), floor($y * ($MAP['height'] / 500)), 9, 9, $COLOUR['black']);
-        imageFilledEllipse($map, floor($x * ($MAP['width'] / 500)), floor($y * ($MAP['height'] / 500)), 6, 6, $online == 1 ? $COLOUR['blue'] : $COLOUR['red']);
+        imageFilledEllipse($map, floor($x * ($MAP['width'] / 500)), floor($y * ($MAP['height'] / 500)), 6, 6, $online == 1 ? $COLOUR['blue'] : (($lastlogin < time() - 15780000) ? $COLOUR['black'] : $COLOUR['red']));
 
         // check if the current user is the user we're looking for
         if ($username == $user) {

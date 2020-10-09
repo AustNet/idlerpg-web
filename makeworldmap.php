@@ -12,10 +12,12 @@
     $red = imageColorAllocate($map, 211, 0, 0);
     ImageColorTransparent($map, $magenta);
     while ($line=fgets($file)) {
-        list($user,,,,,,,,$online,,$x,$y) = explode("\t",trim($line));
+        list($user,,,,,,,,$online,,$x,$y,,,,,,,,,$lastlogin) = explode("\t",trim($line));
         if ($online == 1) {
             imageFilledEllipse($map, floor($x * 2.4), floor($y * 1.2), 9, 9, $black);
             imageFilledEllipse($map, floor($x * 2.4), floor($y * 1.2), 6, 6, $blue);
+        } elseif ($lastlogin < time() - 15780000) {
+            imageFilledEllipse($map, floor($x * 2.4), floor($y * 1.2), 9, 9, $black);
         } else {
             imageFilledEllipse($map, floor($x * 2.4), floor($y * 1.2), 9, 9, $black);
             imageFilledEllipse($map, floor($x * 2.4), floor($y * 1.2), 6, 6, $red);
