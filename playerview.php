@@ -103,16 +103,16 @@
   <div class="w3-content">
     <h1>ITEMS</h1>
     <div class="w3-container">
-        <div class="irpg-item irpg-amulet"><?php echo intval($item['amulet']); ?></div>
-        <div class="irpg-item irpg-boots"><?php echo intval($item['boots']); ?></div>
-        <div class="irpg-item irpg-charm"><?php echo intval($item['charm']); ?></div>
-        <div class="irpg-item irpg-gloves"><?php echo intval($item['gloves']); ?></div>
-        <div class="irpg-item irpg-helmet"><?php echo intval($item['helm']); ?></div>
-        <div class="irpg-item irpg-leggings"><?php echo intval($item['leggings']); ?></div>
-        <div class="irpg-item irpg-ring"><?php echo intval($item['ring']); ?></div>
-        <div class="irpg-item irpg-shield"><?php echo intval($item['shield']); ?></div>
-        <div class="irpg-item irpg-tunic"><?php echo intval($item['tunic']); ?></div>
-        <div class="irpg-item irpg-weapon"><?php echo intval($item['weapon']); ?></div>
+        <div class="w3-round irpg-item irpg-amulet"><?php echo intval($item['amulet']); ?></div>
+        <div class="w3-round irpg-item irpg-boots"><?php echo intval($item['boots']); ?></div>
+        <div class="w3-round irpg-item irpg-charm"><?php echo intval($item['charm']); ?></div>
+        <div class="w3-round irpg-item irpg-gloves"><?php echo intval($item['gloves']); ?></div>
+        <div class="w3-round irpg-item irpg-helmet"><?php echo intval($item['helm']); ?></div>
+        <div class="w3-round irpg-item irpg-leggings"><?php echo intval($item['leggings']); ?></div>
+        <div class="w3-round irpg-item irpg-ring"><?php echo intval($item['ring']); ?></div>
+        <div class="w3-round irpg-item irpg-shield"><?php echo intval($item['shield']); ?></div>
+        <div class="w3-round irpg-item irpg-tunic"><?php echo intval($item['tunic']); ?></div>
+        <div class="w3-round irpg-item irpg-weapon"><?php echo intval($item['weapon']); ?></div>
     </div>
     <hr>
     <h3>SPECIAL ITEMS</h3>
@@ -123,8 +123,12 @@
         foreach ($item as $key => $val) {
             if (itemfeature($val) != null) {
                 echo '<li>'. itemfeature($val) . '</li>';
+                $sum++;
             }
-            $sum += intval($val);
+        }
+
+        if ($sum == 0) {
+            echo '<li>' . $_GET['player'] .' has no special items.</li>';
         }
 ?>
         </ul>
@@ -134,7 +138,7 @@
 <div class="w3-row-padding w3-padding-64 w3-container w3-center">
     <div style="margin: auto;">
         <h1>MAP</h1>
-        <div id="map"><img src="makemap.php?<?php echo md5(time()); ?>&player=<?php echo urlencode($user); ?>"></div>
+        <div id="map"><img class="w3-image" src="makemap.php?<?php echo md5(time()); ?>&player=<?php echo urlencode($user); ?>"></div>
     </div>
 </div>
 
@@ -142,15 +146,15 @@
   <div class="w3-content">
     <div class="w3-twothird">
       <h1>PENALTIES</h1>
-      <!-- div class="w3-container">
-        <div class="irpg-item irpg-kick"><?php echo intval($pen['kick']); ?></div>
-        <div class="irpg-item irpg-logout"><?php echo intval($pen['logout']); ?></div>
-        <div class="irpg-item irpg-msg"><?php echo intval($pen['mesg']); ?></div>
-        <div class="irpg-item irpg-nick"><?php echo intval($pen['nick']); ?></div>
-        <div class="irpg-item irpg-part"><?php echo intval($pen['part']); ?></div>
-        <div class="irpg-item irpg-quest"><?php echo intval($pen['quest']); ?></div>
-        <div class="irpg-item irpg-quit"><?php echo intval($pen['quit']); ?></div>
-    </div -->
+      <div class="w3-container">
+        <div><img src="images/msg.png"><?php echo duration($pen['mesg']); ?></div>
+        <div><img src="images/kick.png"><?php echo duration($pen['kick']); ?></div>
+        <div><img src="images/part.png"><?php echo duration($pen['part']); ?></div>
+        <div><img src="images/nick.png"><?php echo duration($pen['nick']); ?></div>
+        <div><img src="images/quit.png"><?php echo duration($pen['quit']); ?></div>
+        <div><img src="images/logout.png"><?php echo duration($pen['logout']); ?></div>
+        <div><img src="images/quest.png"><?php echo duration($pen['quest']); ?></div>
+    </div>
 <?php
 
         ksort($pen);

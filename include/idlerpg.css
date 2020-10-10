@@ -19,61 +19,40 @@ table.irpg-table {
    font-weight: bold;
    color: #FFFFFF;
    font-size: 30pt;
-   width: 88px;
-   height: 88px;
+   width: 90px;
+   height: 90px;
    -webkit-text-stroke-width: 1px;
    -webkit-text-stroke-color: black;
    float: left;
    margin: 1px;
 }
 .irpg-amulet {
-   background-image: url('../images/amulet.jpg');
+   background: url('../images/items.png') 0px 0px;
 }
 .irpg-boots {
-   background-image: url('../images/boots.jpg');
+   background: url('../images/items.png') -90px 0px;
 }
 .irpg-charm {
-   background-image: url('../images/charm.jpg');
+   background: url('../images/items.png') -180px 0px;
 }
 .irpg-gloves {
-   background-image: url('../images/gloves.jpg');
+   background: url('../images/items.png') -270px 0px;
 }
 .irpg-helmet {
-   background-image: url('../images/helmet.jpg');
+   background: url('../images/items.png') -360px 0px;
 }
 .irpg-leggings {
-   background-image: url('../images/leggings.jpg');
+   background: url('../images/items.png') -450px 0px;
 }
 .irpg-ring {
-   background-image: url('../images/ring.jpg');
+   background: url('../images/items.png') -540px 0px;
 }
 .irpg-shield {
-   background-image: url('../images/shield.jpg');
+   background: url('../images/items.png') -630px 0px;
 }
 .irpg-tunic {
-   background-image: url('../images/tunic.jpg');
+   background: url('../images/items.png') -720px 0px;
 }
 .irpg-weapon {
-   background-image: url('../images/weapon.jpg');
-}
-.irpg-kick {
-   background-image: url('../images/kick.jpg');
-}
-.irpg-logout {
-   background-image: url('../images/logout.jpg');
-}
-.irpg-msg {
-   background-image: url('../images/msg.jpg');
-}
-.irpg-nick {
-   background-image: url('../images/nick.jpg');
-}
-.irpg-part {
-   background-image: url('../images/part.jpg');
-}
-.irpg-quest {
-   background-image: url('../images/quest.jpg');
-}
-.irpg-quit {
-   background-image: url('../images/quit.jpg');
+   background: url('../images/items.png') -810px 0px;
 }
