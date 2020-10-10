@@ -56,3 +56,30 @@ table.irpg-table {
 .irpg-weapon {
    background: url('../images/items.png') -810px 0px;
 }
+.irpg-penalty {
+   padding: 10px 0;
+   width: 90px;
+   height: 90px;
+   margin: 1px;
+}
+.irpg-msg {
+   background: url('../images/penalties.png') 0px 0px;
+}
+.irpg-kick {
+   background: url('../images/penalties.png') -90px 0px;
+}
+.irpg-part {
+   background: url('../images/penalties.png') -180px 0px;
+}
+.irpg-nick {
+   background: url('../images/penalties.png') -270px 0px;
+}
+.irpg-quit {
+   background: url('../images/penalties.png') -360px 0px;
+}
+.irpg-logout {
+   background: url('../images/penalties.png') -450px 0px;
+}
+.irpg-quest {
+   background: url('../images/penalties.png') -540px 0px;
+}

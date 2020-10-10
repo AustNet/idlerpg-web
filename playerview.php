@@ -147,13 +147,13 @@
     <div class="w3-twothird">
       <h1>PENALTIES</h1>
       <div class="w3-container">
-        <div><img src="images/msg.png"><?php echo duration($pen['mesg']); ?></div>
-        <div><img src="images/kick.png"><?php echo duration($pen['kick']); ?></div>
-        <div><img src="images/part.png"><?php echo duration($pen['part']); ?></div>
-        <div><img src="images/nick.png"><?php echo duration($pen['nick']); ?></div>
-        <div><img src="images/quit.png"><?php echo duration($pen['quit']); ?></div>
-        <div><img src="images/logout.png"><?php echo duration($pen['logout']); ?></div>
-        <div><img src="images/quest.png"><?php echo duration($pen['quest']); ?></div>
+        <div><div class="w3-round irpg-penalty irpg-msg"></div><?php echo duration($pen['mesg']); ?></div>
+        <div><div class="w3-round irpg-penalty irpg-kick"></div><?php echo duration($pen['kick']); ?></div>
+        <div><div class="w3-round irpg-penalty irpg-part"></div><?php echo duration($pen['part']); ?></div>
+        <div><div class="w3-round irpg-penalty irpg-nick"></div><?php echo duration($pen['nick']); ?></div>
+        <div><div class="w3-round irpg-penalty irpg-quit"></div><?php echo duration($pen['quit']); ?></div>
+        <div><div class="w3-round irpg-penalty irpg-logout"></div><?php echo duration($pen['logout']); ?></div>
+        <div><div class="w3-round irpg-penalty irpg-quest"></div><?php echo duration($pen['quest']); ?></div>
     </div>
 <?php
 
