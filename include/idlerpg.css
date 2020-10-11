@@ -57,12 +57,16 @@ table.irpg-table {
    background: url('../images/items.png') -810px 0px;
 }
 .irpg-penalty {
-   padding: 10px 0;
    width: 90px;
    height: 90px;
    margin: 1px;
 }
-.irpg-msg {
+.irpg-penalty-bar {
+   border: 1px solid blue;
+   width: 100%;
+   float: left;
+}
+.irpg-mesg {
    background: url('../images/penalties.png') 0px 0px;
 }
 .irpg-kick {

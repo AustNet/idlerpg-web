@@ -5,7 +5,7 @@ $_CONFIG['db'] = new PDO('mysql:host='. $_CONFIG['db_host'] .';dbname='. $_CONFI
 
     function duration($s) {
         $s = abs(intval($s));
-        if ($s == 0) return "None";
+        if ($s == 0) return "No penalty";
         return sprintf("%d day%s, %02d:%02d:%02d",
                        $s/86400,intval($s/86400)==1?"":"s",
                        ($s%86400)/3600,($s%3600)/60,$s%60);
@@ -155,6 +155,26 @@ $_CONFIG['db'] = new PDO('mysql:host='. $_CONFIG['db_host'] .';dbname='. $_CONFI
             return "Jeff's Cluehammer of Doom";
         } elseif (substr($LEVEL, -1, 1) == 'h') {
             return "Juliet's Glorious Ring of Sparkliness";
+        } else {
+            return null;
+        }
+    }
+
+    function penalty2text($PENALTY) {
+        if ($PENALTY == 'mesg') {
+            return 'Channel Message';
+        } elseif ($PENALTY == 'nick') {
+            return 'Nickname Change';
+        } elseif ($PENALTY == 'kick') {
+            return 'Kick';
+        } elseif ($PENALTY == 'logout') {
+            return 'Logout';
+        } elseif ($PENALTY == 'part') {
+            return 'Part';
+        } elseif ($PENALTY == 'quit') {
+            return 'Quit';
+        } elseif ($PENALTY == 'quest') {
+            return 'Quest';
         } else {
             return null;
         }
