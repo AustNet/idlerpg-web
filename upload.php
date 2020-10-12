@@ -22,7 +22,7 @@
         die('ERROR Invalid file type.' . PHP_EOL);
     } else {
         // check which file we are writing to and write it (legacy)
-        $FILE = ($_GET['file'] == 'db' ? $_CONFIG['file_db'] : ($_GET['file'] == 'mod' ? $_CONFIG['file_mod'] : ($_GET['file'] == 'qfile' ? $_CONFIG['file_quest'] : '/dev/null')));
+        $FILE = ($_GET['file'] == 'db' ? $_CONFIG['file_db'] : ($_GET['file'] == 'mod' ? $_CONFIG['file_mod'] : ($_GET['file'] == 'quest' ? $_CONFIG['file_quest'] : '/dev/null')));
         file_put_contents($FILE, $DATA);
 
         if ($_GET['file'] == 'db') {
