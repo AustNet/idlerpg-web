@@ -67,7 +67,7 @@
 
         foreach ($PLAYERS as $PLAYER) {
 ?>
-            <p><b>Player #<?php echo $PLAYER['id']; ?>:</b> <a href="playerview.php?player=<?php echo urlencode($PLAYER['name']); ?>"><?php echo htmlentities($PLAYER['name']); ?></a> <?php echo ($QUEST['stage'] == '2' ? '[Currently: '. $PLAYER['x'] .' x '. $PLAYER['y'] .']' : ''); ?><br>
+            <p><b>Player #<?php echo $PLAYER['id']; ?>:</b> <a href="playerview.php?player=<?php echo urlencode($PLAYER['name']); ?>"><?php echo htmlentities($PLAYER['name']); ?></a> <?php echo ($QUEST['type'] == '2' ? '[Currently: '. $PLAYER['x'] .' x '. $PLAYER['y'] .']' : ''); ?><br>
 <?php
         }
 ?>
