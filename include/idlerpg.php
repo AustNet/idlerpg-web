@@ -179,4 +179,15 @@ $_CONFIG['db'] = new PDO('mysql:host='. $_CONFIG['db_host'] .';dbname='. $_CONFI
             return null;
         }
     }
+
+    function fillcolor($MAP) {
+        // set up our colours
+        $COLOR['black'] = imagecolorallocate($MAP, 0, 0, 0);
+        $COLOR['brown'] = imagecolorallocate($MAP, 102, 51, 0);
+        $COLOR['cream'] = imagecolorallocate($MAP, 255, 255, 204);
+        $COLOR['blue'] = imageColorAllocate($MAP, 0, 128, 255);
+        $COLOR['red'] = imageColorAllocate($MAP, 211, 0, 0);
+        $COLOR['green'] = imageColorAllocate($MAP, 30, 215, 96);
+        return $COLOR;
+    }
 ?>
