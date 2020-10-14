@@ -4,26 +4,21 @@ function write($map, $txt) {
 }
     // get our configuration
     include("include/config.php");
+    include("include/idlerpg.php");
 
     // load the large map
     $map = imagecreatefromjpeg('images/map.large.jpg');
     $MAP['width'] = imagesx($map);
     $MAP['height'] = imagesy($map);
 
+    // set up the colors
+    $COLOR = fillcolor($map);
+
     // trim the username
     $user = substr($_GET['player'],0,30);
 
     // set up required variables
     $stringx=$stringy=-1;
-
-    // set up our colours
-    $COLOUR['black'] = imagecolorallocate($map, 0, 0, 0);
-    $COLOUR['brown'] = imagecolorallocate($map, 102, 51, 0);
-    $COLOUR['cream'] = imagecolorallocate($map, 255, 255, 204);
-    $COLOUR['blue'] = imageColorAllocate($map, 0, 128, 255);
-    $COLOUR['black'] = imageColorAllocate($map, 0, 0, 0);
-    $COLOUR['red'] = imageColorAllocate($map, 211, 0, 0);
-
 
     // pull the user database and clear the header
     $file = file($_CONFIG['file_db']);
@@ -36,8 +31,8 @@ function write($map, $txt) {
         //echo $username . PHP_EOL;
 
         // print the user location dot
-        imageFilledEllipse($map, floor($x * ($MAP['width'] / 500)), floor($y * ($MAP['height'] / 500)), 9, 9, $COLOUR['black']);
-        imageFilledEllipse($map, floor($x * ($MAP['width'] / 500)), floor($y * ($MAP['height'] / 500)), 6, 6, $online == 1 ? $COLOUR['blue'] : (($lastlogin < time() - 15780000) ? $COLOUR['black'] : $COLOUR['red']));
+        imageFilledEllipse($map, floor($x * ($MAP['width'] / 500)), floor($y * ($MAP['height'] / 500)), 9, 9, $COLOR['black']);
+        imageFilledEllipse($map, floor($x * ($MAP['width'] / 500)), floor($y * ($MAP['height'] / 500)), 6, 6, $online == 1 ? $COLOR['blue'] : (($lastlogin < time() - 15780000) ? $COLOR['black'] : $COLOR['red']));
 
         // check if the current user is the user we're looking for
         if ($username == $user) {
@@ -71,20 +66,20 @@ function write($map, $txt) {
         // Avoid drawing a brown dot on a brown area (less 1 because the border sometimes gets stuck)
         $rgb = imageColorAt($map, $USER['x'] - 1, $USER['y'] - 1);
         if ($rgb > 0) { // $rgb is 0 on our parchment-colored areas
-            $temp = $COLOUR['brown'];
-            $COLOUR['brown'] = $COLOUR['cream'];
-            $COLOUR['cream'] = $temp;
+            $temp = $COLOR['brown'];
+            $COLOR['brown'] = $COLOR['cream'];
+            $COLOR['cream'] = $temp;
         }
         // print the user location dot
-        imageFilledEllipse($map, $USER['x'], $USER['y'], 9, 9, $COLOUR['black']);
-        imageFilledEllipse($map, $USER['x'], $USER['y'], 6, 6, $COLOUR['brown']);
+        imageFilledEllipse($map, $USER['x'], $USER['y'], 9, 9, $COLOR['black']);
+        imageFilledEllipse($map, $USER['x'], $USER['y'], 6, 6, $COLOR['brown']);
 
         // print the username background
-        imageFilledRectangle($map, floor($stringx) + 8, floor($stringy) - ($font_height / 2) - 1, floor($stringx) + 10 + $font_width * (strlen($user) + 1), floor($stringy) + ($font_height / 2) + 1, $COLOUR['black']);
-        imageFilledRectangle($map, floor($stringx) + 9, floor($stringy) - ($font_height / 2), floor($stringx) + 9 + $font_width * (strlen($user) + 1), floor($stringy) + ($font_height / 2), $COLOUR['brown']);
+        imageFilledRectangle($map, floor($stringx) + 8, floor($stringy) - ($font_height / 2) - 1, floor($stringx) + 10 + $font_width * (strlen($user) + 1), floor($stringy) + ($font_height / 2) + 1, $COLOR['black']);
+        imageFilledRectangle($map, floor($stringx) + 9, floor($stringy) - ($font_height / 2), floor($stringx) + 9 + $font_width * (strlen($user) + 1), floor($stringy) + ($font_height / 2), $COLOR['brown']);
 
         // print the username text
-        imageString($map, 5, floor($stringx) + 10 + ($font_width / 2), floor($stringy) - ($font_height / 2) - 1, $user, $COLOUR['cream']);
+        imageString($map, 5, floor($stringx) + 10 + ($font_width / 2), floor($stringy) - ($font_height / 2) - 1, $user, $COLOR['cream']);
  
         // crop it down, make sure we account for the borders min/max
         $c = array(

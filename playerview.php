@@ -144,6 +144,8 @@
                 if ($val > $LIMIT) {
                     $LIMIT = $val;
                 }
+
+                if ($val > 0) {
         ?>
             <li class="w3-bar">
                 <span class="w3-bar-item irpg-penalty irpg-<?php echo $key; ?>" style="width: 90px; float: left;"></span>
@@ -156,6 +158,7 @@
                 </div>
             </li>
         <?php
+                }
             }
         ?>
         </ul>
@@ -166,7 +169,7 @@
     <div class="w3-content">
         <h1>World Map</h1>
         <div id="map">
-            <img class="w3-image" src="makemap.php?<?php echo md5(time()); ?>&player=<?php echo urlencode($user); ?>">
+            <img class="w3-image" src="makeplayermap.php?<?php echo md5(time()); ?>&player=<?php echo urlencode($user); ?>">
         </div>
     </div>
 </div>

@@ -1,15 +1,8 @@
-<?
+<?php
     include("include/config.php");
-    $file = fopen($_CONFIG['file_db'],"r");
-    fgets($file,1024);
+    include('include/idlerpg.php');
+    $file = fopen($_CONFIG['file_quest'],"r");
 
-    session_start(); // sessions to generate only one map / person / 20s
-    if (isset($_SESSION['time']) && time()-$_SESSION['time'] < 20) {
-        header("Location: images/maperror.png");
-        exit(0);
-    }
-    $_SESSION['time']=time();
-        $file = fopen($irpg_qfile,"r");
     $type=0;
     while ($line=fgets($file,1024)) {
         $arg = explode(" ",trim($line));
@@ -60,18 +53,38 @@
         exit(0);
     }
 
-    $map = imageCreate(500,500);
-    $magenta = imageColorAllocate($map, 255, 0, 255);
-    imageColorTransparent($map,$magenta);
-    $blue = imageColorAllocate($map, 0, 128, 255);
-    $red = imageColorAllocate($map, 255, 0, 0);
+    $map = imagecreatefromjpeg('images/map.jpg');
+    $MAP['width'] = imagesx($map);
+    $MAP['height'] = imagesy($map);
 
-    imageFilledEllipse($map, $player[1]['x'], $player[1]['y'], 6, 6, $blue);
-    imageFilledEllipse($map, $player[2]['x'], $player[2]['y'], 6, 6, $blue);
-    imageFilledEllipse($map, $player[3]['x'], $player[3]['y'], 6, 6, $blue);
-    imageFilledEllipse($map, $player[4]['x'], $player[4]['y'], 6, 6, $blue);
-    if ($stage == 1) imageFilledEllipse($map, $p1[0], $p1[1], 8, 8, $red);
-    else imageFilledEllipse($map, $p2[0], $p2[1], 9, 9, $red);
+    // set up the colors
+    $COLOR = fillcolor($map);
+
+    // show the stage dots
+    if ($stage == 1) {
+        imageFilledEllipse($map, $p1[0] * ($MAP['width'] / 500), $p1[1] * ($MAP['height'] / 500), 20, 20, $COLOR['black']);
+        imageFilledEllipse($map, $p1[0] * ($MAP['width'] / 500), $p1[1] * ($MAP['height'] / 500), 17, 17, $COLOR['red']);
+        imageFilledEllipse($map, $p2[0] * ($MAP['width'] / 500), $p2[1] * ($MAP['height'] / 500), 20, 20, $COLOR['black']);
+        imageFilledEllipse($map, $p2[0] * ($MAP['width'] / 500), $p2[1] * ($MAP['height'] / 500), 17, 17, $COLOR['red']);
+    } else {
+        imageFilledEllipse($map, $p1[0] * ($MAP['width'] / 500), $p1[1] * ($MAP['height'] / 500), 20, 20, $COLOR['black']);
+        imageFilledEllipse($map, $p1[0] * ($MAP['width'] / 500), $p1[1] * ($MAP['height'] / 500), 17, 17, $COLOR['green']);
+        imageFilledEllipse($map, $p2[0] * ($MAP['width'] / 500), $p2[1] * ($MAP['height'] / 500), 20, 20, $COLOR['black']);
+        imageFilledEllipse($map, $p2[0] * ($MAP['width'] / 500), $p2[1] * ($MAP['height'] / 500), 17, 17, $COLOR['red']);
+    }
+
+    // show the user dots
+    imageFilledEllipse($map, $player[1]['x'] * ($MAP['width'] / 500), $player[1]['y'] * ($MAP['height'] / 500), 9, 9, $COLOR['black']);
+    imageFilledEllipse($map, $player[1]['x'] * ($MAP['width'] / 500), $player[1]['y'] * ($MAP['height'] / 500), 6, 6, $COLOR['blue']);
+
+    imageFilledEllipse($map, $player[2]['x'] * ($MAP['width'] / 500), $player[2]['y'] * ($MAP['height'] / 500), 9, 9, $COLOR['black']);
+    imageFilledEllipse($map, $player[2]['x'] * ($MAP['width'] / 500), $player[2]['y'] * ($MAP['height'] / 500), 6, 6, $COLOR['blue']);
+
+    imageFilledEllipse($map, $player[3]['x'] * ($MAP['width'] / 500), $player[3]['y'] * ($MAP['height'] / 500), 9, 9, $COLOR['black']);
+    imageFilledEllipse($map, $player[3]['x'] * ($MAP['width'] / 500), $player[3]['y'] * ($MAP['height'] / 500), 6, 6, $COLOR['blue']);
+
+    imageFilledEllipse($map, $player[4]['x'] * ($MAP['width'] / 500), $player[4]['y'] * ($MAP['height'] / 500), 9, 9, $COLOR['black']);
+    imageFilledEllipse($map, $player[4]['x'] * ($MAP['width'] / 500), $player[4]['y'] * ($MAP['height'] / 500), 6, 6, $COLOR['blue']);
 
     header("Content-type: image/png");
     imagePNG($map);
