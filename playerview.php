@@ -185,18 +185,23 @@
         }
         fclose($file);
         if (!is_null($temp) && count($temp)) {
-            echo('<h2>');
+            echo('<h2></h2>');
 ?>
 
 <div class="w3-row-padding w3-padding-64 w3-container">
   <div class="w3-content">
     <div class="w3-twothird">
-    <h1>CHARACTER MODIFIERS</h1>
-
+    <h1>Character Modifiers</h1>
 <?php
+                $count = 0;
                 foreach ($temp as $line) {
+                    $count++;
                     $line=htmlentities(trim($line));
-                    echo "      $line<br />\n";
+                    if (($count > 10) && (empty($_GET['allmods']))) {
+                      //continue;
+                    } else {
+                      echo "      $line<br />\n";
+                    }
                 }
                 echo "      <br />\n";
         }

@@ -44,7 +44,6 @@
         }
     }
     fclose($file);
-    echo "<?xml version=\"1.0\"?>";
 ?>
 
 <player>

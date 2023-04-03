@@ -12,13 +12,11 @@
 
     $DATA = file_get_contents("php://input");
 
-    if ($DATA == '') {
-        die('ERROR No file uploaded.' . PHP_EOL);
-    } elseif (!isset($_GET['api']) || !isset($_GET['file'])) {
+    if (!isset($_GET['api']) || !isset($_GET['file'])) {
         die('ERROR No api/file data included in package.' . PHP_EOL);
     } elseif ($_GET['api'] != $_CONFIG['api_key']) {
         die('ERROR Invalid api key.' . PHP_EOL);
-    } elseif (strpos('db mod qfile', $_GET['file']) === false) {
+    } elseif (strpos('db mod quest', $_GET['file']) === false) {
         die('ERROR Invalid file type.' . PHP_EOL);
     } else {
         // check which file we are writing to and write it (legacy)
